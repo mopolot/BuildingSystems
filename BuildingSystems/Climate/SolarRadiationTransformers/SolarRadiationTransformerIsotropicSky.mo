@@ -28,7 +28,7 @@ annotation (Documentation(info="<html>
     IrrTotTil = R * IrrDirHor + 0.5 * (1.0 + cosAngleTil) * IrrDifHor + 0.5 * (1.0 - cosAngleTil) * rhoAmb * IrrTotHor
     </code>
 <p>
-The first term <code>R*IDirHor</code> stands for the total direct radiation on the tilted surface. The second term <code>0.5 * (1.0 + cosAngleTil) * IrrDifHor </code> stands for the fraction of diffuse irradiation on a tilted surface. It corresponds to the isotropic model of Liu and Jordan. The third term represents the portion of incident radiation on the tilted surface due to reflection on the ground 
+The first term <code>R*IDirHor</code> stands for the total direct radiation on the tilted surface. The second term and third term correspond to the isotropic model of Liu and Jordan: It stands for the fraction of diffuse irradiation on a tilted surface and portion of incident radiation on the tilted surface due to reflection on the ground respectively. 
 </p>
 <p>
     <code>cosAngleTil</code> is the cosinus of the tilt angle, the angle formated by the tilted surface and
