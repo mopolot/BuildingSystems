@@ -5,10 +5,10 @@ model SolarRadiationTransformerIsotropicSky
 equation
   R = BuildingSystems.Utilities.SmoothFunctions.softcut_upper(cosAngleDegInc/cosAngleZen,5.0,0.001);
 
-  radiationPort.IrrDir = R * IrrDirHor;
+  radiationPort.IrrDir = BuildingSystems.Utilities.SmoothFunctions.softcut_upper(R * IrrDirHor, 1341.0,  0.001);
 
   // softcut for the limit of the solar constant = 1341 W/m^2
-  IrrTotTil = BuildingSystems.Utilities.SmoothFunctions.softcut_upper(R * IrrDirHor + 0.5 * (1.0 + cosAngleDegTil) * IrrDifHor,1341.0,0.01)
+  IrrTotTil = BuildingSystems.Utilities.SmoothFunctions.softcut_upper(radiationPort.IrrDir + 0.5 * (1.0 + cosAngleDegTil) * IrrDifHor,1341.0,0.01)
     + 0.5 * (1.0 - cosAngleDegTil) * rhoAmb * IrrTotHor;
 
 annotation (Documentation(info="<html>
