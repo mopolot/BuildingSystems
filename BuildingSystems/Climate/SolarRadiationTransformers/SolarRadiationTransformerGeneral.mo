@@ -30,6 +30,7 @@ partial model SolarRadiationTransformerGeneral
     "Tilt angle of the surface"
     annotation (Placement(transformation(extent={{-102,-46},{-62,-6}}), iconTransformation(extent={{-90,-34},{-62,-6}})));
   Modelica.SIunits.Conversions.NonSIunits.Angle_deg angleZen "Zenith angle";
+<<<<<<< HEAD
   Real cosAngleDegAzi "Cosinus of the azimuth angle";
   Real cosAngleDegInc "Cosinus of the incidence angle";
   Real cosAngleDegTil "Cosinus of the tilt angle";
@@ -44,6 +45,34 @@ partial model SolarRadiationTransformerGeneral
   Modelica.SIunits.Conversions.NonSIunits.Time_day dayOfYear "Day of year";
   Real x "Helping variable";
   Real Z "Shift factor";
+=======
+  Real cosAngleDegAzi
+    "Cosinus of the azimuth angle";
+  Real cosAngleDegInc
+    "Cosinus of the incidence angle";
+  Real cosAngleDegTil
+    "Cosinus of the tilt angle";
+  Real cosAngleZen
+    "Cosinus of the zenith angle";
+  Modelica.SIunits.Angle angleDec
+    "Declination angle of the sun";
+  Modelica.SIunits.Angle angleHr
+    "Hour angle of the sun";
+  Real R
+    "R-factor for solar beam radiation";
+  Real sinangleDegAzi
+    "Sinus of the azimuth angle";
+  Real sinangleDegTil
+    "Sinus of the tilt angle";
+  BuildingSystems.Types.Time_hr timeSun
+    "Solar time";
+  Real dayOfYear
+    "Day of year";
+  Real x
+    "Helping variable";
+  Real Z
+    "Shift factor";
+>>>>>>> master
 protected
   parameter Real sinAngleLat = sin(latitudeDeg * Modelica.Constants.pi / 180.0)
     "Sinus of the latitude";
