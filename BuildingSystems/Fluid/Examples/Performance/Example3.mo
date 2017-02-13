@@ -6,14 +6,15 @@ model Example3
   package Medium = Modelica.Media.Water.ConstantPropertyLiquidWater;
   parameter Modelica.SIunits.MassFlowRate m_flow_nominal=1
     "Nominal mass flow rate";
-  parameter Modelica.SIunits.Pressure dp_nominal=1
+  parameter Modelica.SIunits.PressureDifference dp_nominal=1
     "Pressure drop at nominal mass flow rate";
   Fluid.Movers.FlowControlled_m_flow pump(
     redeclare package Medium = Medium,
     m_flow_nominal=m_flow_nominal,
     filteredSpeed=false,
     allowFlowReversal=false,
-    energyDynamics=Modelica.Fluid.Types.Dynamics.FixedInitial)
+    energyDynamics=Modelica.Fluid.Types.Dynamics.FixedInitial,
+    nominalValuesDefineDefaultPressureCurve=true)
     "Pump model with unidirectional flow"
     annotation (Placement(transformation(extent={{-60,-10},{-40,10}})));
   Fluid.Sources.Boundary_pT bou(redeclare package Medium = Medium, nPorts=1)
@@ -26,7 +27,7 @@ model Example3
   Modelica.Blocks.Sources.Pulse pulse(period=1) "Pulse input"
     annotation (Placement(transformation(extent={{-100,14},{-80,34}})));
 
-  Fluid.FixedResistances.FixedResistanceDpM[nRes.k] res(
+  FixedResistances.PressureDrop[nRes.k] res(
     redeclare each package Medium = Medium,
     each m_flow_nominal=m_flow_nominal,
     each from_dp=from_dp.k,
@@ -40,7 +41,7 @@ model Example3
   Modelica.Blocks.Sources.BooleanConstant from_dp(k=true)
     "Block for easily changing parameter from_dp.k"
     annotation (Placement(transformation(extent={{-20,-42},{0,-22}})));
-  Fluid.FixedResistances.FixedResistanceDpM[nRes.k] res1(
+  FixedResistances.PressureDrop[nRes.k] res1(
     redeclare package Medium = Medium,
     each m_flow_nominal=m_flow_nominal,
     each from_dp=from_dp.k,
@@ -74,6 +75,12 @@ equation
     experiment(StopTime=1000),
     Documentation(revisions="<html>
 <ul>
+<li>
+January 22, 2016, by Michael Wetter:<br/>
+Corrected type declaration of pressure difference.
+This is
+for <a href=\"https://github.com/iea-annex60/modelica-annex60/issues/404\">#404</a>.
+</li>
 <li>
 July 14, 2015, by Michael Wetter:<br/>
 Revised documentation.

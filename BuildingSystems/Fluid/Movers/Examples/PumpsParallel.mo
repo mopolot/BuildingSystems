@@ -10,7 +10,7 @@ model PumpsParallel "Two flow machines in parallel"
   parameter Modelica.SIunits.Density rho_nominal=1000
     "Density, used to compute fluid mass";
 
-  BuildingSystems.Fluid.FixedResistances.FixedResistanceDpM dpIn1(
+  BuildingSystems.Fluid.FixedResistances.PressureDrop dpIn1(
     redeclare package Medium = Medium,
     dp_nominal=1000,
     m_flow_nominal=0.5*m_flow_nominal) "Pressure drop"
@@ -22,7 +22,7 @@ model PumpsParallel "Two flow machines in parallel"
     "Model of a flow machine"
     annotation (Placement(transformation(extent={{20,100},{40,120}})));
 
-  BuildingSystems.Fluid.FixedResistances.FixedResistanceDpM dpOut1(
+  BuildingSystems.Fluid.FixedResistances.PressureDrop dpOut1(
     redeclare package Medium = Medium,
     dp_nominal=1000,
     m_flow_nominal=0.5*m_flow_nominal) "Pressure drop"
@@ -33,18 +33,18 @@ model PumpsParallel "Two flow machines in parallel"
     nPorts=2,
     T=293.15) annotation (Placement(transformation(extent={{-92,48},{-72,68}})));
 
-  BuildingSystems.Fluid.FixedResistances.FixedResistanceDpM dpIn(
+  BuildingSystems.Fluid.FixedResistances.PressureDrop dpIn(
     redeclare package Medium = Medium,
     m_flow_nominal=m_flow_nominal,
     dp_nominal=1000) "Pressure drop"
     annotation (Placement(transformation(extent={{-60,50},{-40,70}})));
-  BuildingSystems.Fluid.FixedResistances.FixedResistanceDpM dpOut3(
+  BuildingSystems.Fluid.FixedResistances.PressureDrop dpOut3(
     redeclare package Medium = Medium,
     m_flow_nominal=m_flow_nominal,
     dp_nominal=1000) "Pressure drop"
     annotation (Placement(transformation(extent={{100,50},{120,70}})));
 
-  BuildingSystems.Fluid.FixedResistances.FixedResistanceDpM dpIn2(
+  BuildingSystems.Fluid.FixedResistances.PressureDrop dpIn2(
     redeclare package Medium = Medium,
     dp_nominal=1000,
     m_flow_nominal=0.5*m_flow_nominal) "Pressure drop"
@@ -53,10 +53,9 @@ model PumpsParallel "Two flow machines in parallel"
     redeclare package Medium = Medium,
     per(pressure(V_flow={0, m_flow_nominal/rho_nominal}, dp={2*4*1000, 0})),
     energyDynamics=Modelica.Fluid.Types.Dynamics.FixedInitial,
-    inputType=BuildingSystems.Fluid.Types.InputType.Constant,
-    normalized_speed=1) "Model of a flow machine"
+    inputType=BuildingSystems.Fluid.Types.InputType.Constant) "Model of a flow machine"
     annotation (Placement(transformation(extent={{20,0},{40,20}})));
-  BuildingSystems.Fluid.FixedResistances.FixedResistanceDpM dpOut2(
+  BuildingSystems.Fluid.FixedResistances.PressureDrop dpOut2(
     redeclare package Medium = Medium,
     dp_nominal=1000,
     m_flow_nominal=0.5*m_flow_nominal) "Pressure drop"
@@ -124,6 +123,9 @@ As its speed is reduced, the mass flow rate changes its direction in such a way 
 at the top has reverse flow.
 </html>", revisions="<html>
 <ul>
+<li>February 20, 2016, by Ruben Baetens:<br/>
+Removal of <code>dynamicBalance</code> as parameter for <code>massDynamics</code> and <code>energyDynamics</code>.
+</li>
 <li>
 April 2, 2015, by Filip Jorissen:<br/>
 Set constant speed for pump using a <code>parameter</code> 

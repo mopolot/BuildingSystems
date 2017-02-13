@@ -12,7 +12,7 @@ model RadiatorEN442_2 "Test model for radiator"
  parameter Modelica.SIunits.MassFlowRate m_flow_nominal=
     Q_flow_nominal/(T_a_nominal-T_b_nominal)/Medium.cp_const
     "Nominal mass flow rate";
- parameter Modelica.SIunits.Pressure dp_nominal = 3000
+ parameter Modelica.SIunits.PressureDifference dp_nominal = 3000
     "Pressure drop at m_flow_nominal";
 
   BuildingSystems.Fluid.Sources.Boundary_pT sou(
@@ -21,14 +21,16 @@ model RadiatorEN442_2 "Test model for radiator"
     use_p_in=true,
     T=T_a_nominal)
     annotation (Placement(transformation(extent={{-64,-68},{-44,-48}})));
-  Fluid.FixedResistances.FixedResistanceDpM res2(
+  FixedResistances.PressureDrop res2(
     redeclare package Medium = Medium,
     m_flow_nominal=m_flow_nominal,
-    dp_nominal=dp_nominal) annotation (Placement(transformation(extent={{20,-70},{40,-50}})));
-  Fluid.FixedResistances.FixedResistanceDpM res1(
+    dp_nominal=dp_nominal)
+    annotation (Placement(transformation(extent={{20,-70},{40,-50}})));
+  FixedResistances.PressureDrop res1(
     redeclare package Medium = Medium,
     m_flow_nominal=m_flow_nominal,
-    dp_nominal=dp_nominal) annotation (Placement(transformation(extent={{20,-2},{40,18}})));
+    dp_nominal=dp_nominal)
+    annotation (Placement(transformation(extent={{20,-2},{40,18}})));
   BuildingSystems.Fluid.Sources.Boundary_pT sin(
     redeclare package Medium = Medium,
     nPorts=2,
@@ -108,6 +110,12 @@ This test model compares the radiator model when
 used as a steady-state and a dynamic model.
 </html>", revisions="<html>
 <ul>
+<li>
+January 22, 2016, by Michael Wetter:<br/>
+Corrected type declaration of pressure difference.
+This is
+for <a href=\"https://github.com/iea-annex60/modelica-annex60/issues/404\">#404</a>.
+</li>
 <li>
 June 5, 2015 by Michael Wetter:<br/>
 Removed <code>annotation(Evaluate=true)</code> from instances

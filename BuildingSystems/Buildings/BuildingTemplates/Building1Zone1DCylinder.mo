@@ -41,7 +41,7 @@ model Building1Zone1DCylinder
   parameter Modelica.SIunits.Length height = 2.8
     "Height of the building (inner space)"
     annotation(Dialog(tab="Geometry",group="Building"));
-  BuildingSystems.Buildings.Constructions.Walls.WallThermal1DNodes wall[nSeg](
+  replaceable BuildingSystems.Buildings.Constructions.Walls.WallThermal1DNodes wall[nSeg](
     each height = height,
     width = {sqrt((circle.point[if i < nSeg then i+1 else 1].x-circle.point[i].x)^2
       + (circle.point[if i < nSeg then i+1 else 1].y-circle.point[i].y)^2) for i in 1:nSeg},
@@ -51,21 +51,24 @@ model Building1Zone1DCylinder
       * 180.0 / Modelica.Constants.pi * (if i / nSeg > 0.5 then 1.0 else -1.0)
       + angleDegAziBuilding for i in 1:nSeg},
     each angleDegTil = 90.0)
-    annotation (Placement(transformation(extent={{-10,-10},{10,10}},rotation=180,origin={-40,10})));
-  BuildingSystems.Buildings.Constructions.Walls.WallThermal1DNodes ceiling(
+    annotation (Dialog(tab = "Constructions", group = "model type"),
+      Placement(transformation(extent={{-10,-10},{10,10}},rotation=180,origin={-40,10})));
+  replaceable BuildingSystems.Buildings.Constructions.Walls.WallThermal1DNodes ceiling(
     height = 1.0,
     width = Modelica.Constants.pi * (diameter/2)^2,
     constructionData = constructionCeiling,
     angleDegAzi = 0.0,
     angleDegTil = 180.0)
-    annotation (Placement(transformation(extent={{-10,-10},{10,10}},rotation=90,origin={22,20})));
-  BuildingSystems.Buildings.Constructions.Walls.WallThermal1DNodes bottom(
+    annotation (Dialog(tab = "Constructions", group = "model type"),
+      Placement(transformation(extent={{-10,-10},{10,10}},rotation=90,origin={22,20})));
+  replaceable BuildingSystems.Buildings.Constructions.Walls.WallThermal1DNodes bottom(
     height = 1.0,
     width = Modelica.Constants.pi * (diameter/2)^2,
     constructionData = constructionBottom,
     angleDegAzi = 0.0,
     angleDegTil = 0.0)
-    annotation (Placement(transformation(extent={{-10,-10},{10,10}},rotation=270,origin={20,-20})));
+    annotation (Dialog(tab = "Constructions", group = "model type"),
+      Placement(transformation(extent={{-10,-10},{10,10}},rotation=270,origin={20,-20})));
 protected
   parameter BuildingSystems.Geometries.BaseClasses.GeometryCircle circle(
     nSeg = nSeg,
@@ -118,10 +121,10 @@ equation
   end if;
   // Ideal load calculation
   if heatSources then
-    connect(zone.heatSourcesPorts, heatSourcesPorts) annotation (Line(
-      points={{0.7,-7.3},{0.7,46.35},{0,46.35},{0,100}},
-      color={127,0,0},
-      smooth=Smooth.None));
+    connect(conHeatSourcesPorts, zone.conHeatSourcesPorts) annotation (Line(
+       points={{-44,120},{-44,120},{-44,46},{-5.1,46},{-5.1,-7.3}}, color={127,0,0}));
+    connect(zone.radHeatSourcesPorts, radHeatSourcesPorts) annotation (Line(
+       points={{0.7,-7.3},{0.7,54.35},{0,54.35},{0,120}}, color={127,0,0}));
   end if;
   for i in 1:nSeg loop
     connect(wall[i].toSurfacePort_1, zone.toConstructionPorts1[i]) annotation (Line(
@@ -156,4 +159,6 @@ equation
       points={{20,-22},{20,-22},{20,-70},{8.88178e-016,-70},{8.88178e-016,-90.8}},
       color={0,0,0},
       pattern=LinePattern.Solid));
+
+  annotation(defaultComponentName="building");
 end Building1Zone1DCylinder;

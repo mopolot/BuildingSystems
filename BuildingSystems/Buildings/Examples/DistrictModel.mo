@@ -6,15 +6,15 @@ model DistrictModel
   parameter Integer nBuildings = 40;
   parameter Integer nSurfacesProBuilding = building[1].nSurfacesAmbient;
   BuildingSystems.Buildings.BuildingTemplates.Building1Zone0D building[nBuildings](
-    each AAmbient=1000,
-    each AInner=500,
-    each AGround=200,
+    each AAmb=1000,
+    each AInn=500,
+    each AGro=200,
     each nWindows=1,
-    each AWindow={100},
+    each AWin={100},
     each VAir=2000,
-    each CAmbient=100000,
-    each CInner=100000,
-    each CGround=100000,
+    each CAmb=100000,
+    each CInn=100000,
+    each CGro=100000,
     angleDegAziBuilding = {10*i for i in 1:nBuildings})
     annotation (Placement(transformation(extent={{-10,-10},{10,10}})));
   //Modelica.Blocks.Sources.Constant TSetCooling(k=1000.0) // -> Free floting temperature
@@ -27,7 +27,7 @@ model DistrictModel
     annotation (Placement(transformation(extent={{-2,-2},{2,2}},rotation=180,origin={24,4})));
   BuildingSystems.Buildings.Ambient ambient(
     nSurfaces=nBuildings*building[1].nSurfacesAmbient,
-    weatherDataFile=BuildingSystems.Climate.WeatherDataMeteonorm.WeatherDataFile_Germany_Berlin())
+    redeclare BuildingSystems.Climate.WeatherDataMeteonorm.WeatherDataFile_Germany_Berlin weatherDataFile)
     annotation (Placement(transformation(extent={{-40,-10},{-20,10}})));
 equation
    for i in 1:nBuildings loop
@@ -63,5 +63,19 @@ equation
   annotation(experiment(StartTime=0, StopTime=31536000),
     __Dymola_Commands(file="modelica://BuildingSystems/Resources/Scripts/Dymola/Buildings/Examples/DistrictModel.mos" "Simulate and plot"),
     Diagram(coordinateSystem(preserveAspectRatio=false, extent={{-60,-60},{60,60}}), graphics={Text(extent={{-52,-18},{52,-86}},lineColor={0,0,255},
-    textString="Simulation of strong simplified 40 thermal building models")}),Icon(coordinateSystem(preserveAspectRatio=false, extent={{-100,-40},{100,40}})));
+    textString="Simulation of strong simplified 40 thermal building models")}),
+    Icon(coordinateSystem(preserveAspectRatio=false, extent={{-100,-40},{100,40}})),
+Documentation(info="<html>
+<p>
+Example that simulates 40 strong simplified (low-order) thermal building models.
+</p>
+</html>",
+revisions="<html>
+<ul>
+<li>
+May 21, 2016, by Christoph Nytsch-Geusen:<br/>
+First implementation.
+</li>
+</ul>
+</html>"));
  end DistrictModel;

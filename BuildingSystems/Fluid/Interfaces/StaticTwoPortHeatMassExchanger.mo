@@ -1,8 +1,7 @@
 within BuildingSystems.Fluid.Interfaces;
 model StaticTwoPortHeatMassExchanger
   "Partial model transporting fluid between two ports without storing mass or energy"
-  extends BuildingSystems.Fluid.Interfaces.PartialTwoPortInterface(
-  showDesignFlowDirection = false);
+  extends BuildingSystems.Fluid.Interfaces.PartialTwoPortInterface;
   extends BuildingSystems.Fluid.Interfaces.TwoPortFlowResistanceParameters(
     final computeFlowResistance=(abs(dp_nominal) > Modelica.Constants.eps));
 
@@ -21,16 +20,16 @@ model StaticTwoPortHeatMassExchanger
   // Models for conservation equations and pressure drop
   BuildingSystems.Fluid.Interfaces.StaticTwoPortConservationEquation vol(
     redeclare final package Medium = Medium,
-    final sensibleOnly = sensibleOnly,
+    final use_mWat_flow = not sensibleOnly,
     final prescribedHeatFlowRate = prescribedHeatFlowRate,
     final m_flow_nominal = m_flow_nominal,
     final allowFlowReversal=allowFlowReversal,
     final m_flow_small=m_flow_small)
     "Control volume for steady-state energy and mass balance"
     annotation (Placement(transformation(extent={{15,-10}, {35,10}})));
-  BuildingSystems.Fluid.FixedResistances.FixedResistanceDpM preDro(
+
+  BuildingSystems.Fluid.FixedResistances.PressureDrop preDro(
     redeclare final package Medium = Medium,
-    final use_dh=false,
     final m_flow_nominal=m_flow_nominal,
     final deltaM=deltaM,
     final allowFlowReversal=allowFlowReversal,
@@ -38,7 +37,7 @@ model StaticTwoPortHeatMassExchanger
     final from_dp=from_dp,
     final linearized=linearizeFlowResistance,
     final homotopyInitialization=homotopyInitialization,
-    final dp_nominal=dp_nominal) "Pressure drop model"
+    final dp_nominal=dp_nominal) "Flow resistance"
     annotation (Placement(transformation(extent={{-50,-10},{-30,10}})));
 
   // Outputs that are needed in models that extend this model
@@ -148,6 +147,26 @@ are the results of an iterative solver.
 </p>
 </html>", revisions="<html>
 <ul>
+<li>
+December 1, 2016, by Michael Wetter:<br/>
+Updated model as <code>use_dh</code> is no longer a parameter in the pressure drop model.<br/>
+This is for
+<a href=\"https://github.com/iea-annex60/modelica-annex60/issues/480\">#480</a>.
+</li>
+<li>
+January 22, 2016 by Michael Wetter:<br/>
+Removed assignment of <code>sensibleOnly</code> in <code>bal1</code> and <code>bal2</code>
+as this constant has been removed in
+<a href=\"modelica://BuildingSystems.Fluid.Interfaces.StaticTwoPortHeatMassExchanger\">
+BuildingSystems.Fluid.Interfaces.StaticTwoPortHeatMassExchanger</a>.
+</li>
+<li>
+November 19, 2015, by Michael Wetter:<br/>
+Removed assignment of parameter
+<code>showDesignFlowDirection</code> in <code>extends</code> statement.
+This is for
+<a href=\"https://github.com/iea-annex60/modelica-annex60/issues/349\">#349</a>.
+</li>
 <li>
 July 2, 2015 by Michael Wetter:<br/>
 Revised implementation of conservation equations,

@@ -6,22 +6,22 @@ model WaterHeatingSystem
   parameter Modelica.SIunits.MassFlowRate m_flow_nominal= 0.05;
   BuildingSystems.Buildings.Ambient ambient(
     nSurfaces=building.nSurfacesAmbient,
-    weatherDataFile=BuildingSystems.Climate.WeatherDataMeteonorm.WeatherDataFile_USA_SanFrancisco())
+    redeclare BuildingSystems.Climate.WeatherDataMeteonorm.WeatherDataFile_USA_SanFrancisco weatherDataFile)
     "Ambient model"
     annotation (Placement(transformation(extent={{-26,42},{-6,62}})));
   BuildingSystems.Buildings.BuildingTemplates.Building1Zone0D building(
-    AAmbient=4*10*2.5+10*10,
-    AInner=10*10,
-    AGround=10*10,
+    AAmb=4*10*2.5+10*10,
+    AInn=10*10,
+    AGro=10*10,
     nWindows=1,
-    AWindow={2*3},
+    AWin={2*3},
     VAir=10*10*2.5,
-    CAmbient=100000,
-    CInner=100000,
-    CGround=100000,
-    UAmbient=0.2,
-    UInner=1.0,
-    UGround=0.2,
+    CAmb=100000,
+    CInn=100000,
+    CGro=100000,
+    UValAmb=0.2,
+    UValInn=1.0,
+    UValGro=0.2,
     calcIdealLoads=false,
     heatSources=true,
     nHeatSources=1,
@@ -36,7 +36,7 @@ model WaterHeatingSystem
     V_start=0.1)
     "Expansion vessel model"
     annotation (Placement(transformation(extent={{20,-54},{32,-42}})));
-  Fluid.FixedResistances.Pipe  pip1(
+  BuildingSystems.Fluid.FixedResistances.Pipe  pip1(
     redeclare package Medium = Medium,
     m_flow_nominal=m_flow_nominal,
     nNodes=2,
@@ -59,7 +59,7 @@ model WaterHeatingSystem
     VWat=0.005,
     mDry=0.0001,
     nEle=5,
-    fraRad=0,
+    fraRad=0.5,
     T_a_nominal=273.15 + 90.0,
     T_b_nominal=273.15 + 70,
     TAir_nominal=273.15 + 20.0,
@@ -67,7 +67,7 @@ model WaterHeatingSystem
     energyDynamics=Modelica.Fluid.Types.Dynamics.FixedInitial)
     "radiator model"
     annotation (Placement(transformation(extent={{-12,-22},{8,-2}})));
-  Fluid.FixedResistances.Pipe pip2(
+  BuildingSystems.Fluid.FixedResistances.Pipe pip2(
     redeclare package Medium = Medium,
     m_flow_nominal=m_flow_nominal,
     nNodes=2,
@@ -191,7 +191,7 @@ equation
       points={{26,-54},{26,-60},{38,-60},{38,-12},{32,-12}},
       color={0,127,255},
       smooth=Smooth.None));
-  connect(rad.heatPortCon, building.heatSourcesPorts[1]) annotation (Line(
+  connect(rad.heatPortCon, building.conHeatSourcesPorts[1]) annotation (Line(
       points={{-4,-4.8},{-4,68},{16.2,68},{16.2,62}},
       color={191,0,0},
       smooth=Smooth.None));
@@ -205,9 +205,27 @@ equation
           {22,-40},{22,-17}}, color={191,0,0}));
   connect(TAmb.port, pip2.heatPort) annotation (Line(points={{-60,-40},{-60,-40},
           {-26,-40},{-26,-55}}, color={191,0,0}));
+  connect(rad.heatPortRad, building.radHeatSourcesPorts[1]) annotation (Line(
+     points={{0,-4.8},{0,-4.8},{0,68},{17,68},{17,62}}, color={191,0,0}));
 
   annotation(experiment(StartTime=0, StopTime=31536000),
     __Dymola_Commands(file="modelica://BuildingSystems/Resources/Scripts/Dymola/Applications/HeatingSystems/WaterHeatingSystem.mos" "Simulate and plot"),
     Diagram(coordinateSystem(preserveAspectRatio=false, extent={{-100,-100},{100,100}}), graphics={Text(extent={{-56,-54},{48,-122}}, lineColor={0,0,255},
-    textString="Warm water heating system with simplified thermal building model")}),Icon(coordinateSystem(preserveAspectRatio=false, extent={{-100,-40},{100,40}})));
+    textString="Warm water heating system with simplified thermal building model")}),
+    Icon(coordinateSystem(preserveAspectRatio=false, extent={{-100,-40},{100,40}})),
+Documentation(info="<html>
+<p>
+Example that simulates a warm water heating system for a building. The system
+works with a constant supply temperature, the mass flow of the heating loop
+is controlled by a valve related to the necessary heating demand of the building.
+</p>
+</html>",
+revisions="<html>
+<ul>
+<li>
+May 21, 2016, by Christoph Nytsch-Geusen:<br/>
+First implementation.
+</li>
+</ul>
+</html>"));
 end WaterHeatingSystem;

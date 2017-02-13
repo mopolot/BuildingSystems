@@ -13,7 +13,7 @@ model BuildingHygroThermal1Zone1D
       nLayers=2,
       thickness={0.1,0.1},
       material={BuildingSystems.HAM.Data.MaterialProperties.HygroThermal.Beton(),
-    BuildingSystems.HAM.Data.MaterialProperties.HygroThermal.Beton()})
+        BuildingSystems.HAM.Data.MaterialProperties.HygroThermal.Beton()})
       annotation(Placement(transformation(extent={{-34,40},{-14,60}})));
     BuildingSystems.Buildings.Zones.ZoneTemplateAirvolumeMixed zone1(
       V = 4.0*4.0*2.5,
@@ -166,7 +166,8 @@ model BuildingHygroThermal1Zone1D
   end Building;
 
   BuildingSystems.Buildings.Ambient ambient(
-    nSurfaces=building.nSurfacesAmbient,weatherDataFile=BuildingSystems.Climate.WeatherDataMeteonorm.WeatherDataFile_USA_SanFrancisco())
+    nSurfaces=building.nSurfacesAmbient,
+    redeclare BuildingSystems.Climate.WeatherDataMeteonorm.WeatherDataFile_USA_SanFrancisco weatherDataFile)
     annotation (Placement(transformation(extent={{-40,-10},{-20,10}})));
   Building building(nZones=1)
     annotation (Placement(transformation(extent={{-10,-10},{10,10}})));
@@ -209,5 +210,19 @@ equation
   annotation(experiment(StartTime=0, StopTime=31536000),
     __Dymola_Commands(file="modelica://BuildingSystems/Resources/Scripts/Dymola/Buildings/Examples/BuildingHygroThermal1Zone1D.mos" "Simulate and plot"),
     Diagram(coordinateSystem(preserveAspectRatio=false, extent={{-60,-60},{60,60}}), graphics={Text(extent={{-52,-18},{52,-86}},lineColor={0,0,255},
-    textString="1D-Hygro-Thermal building model with 1 zone under real weather data")}),Icon(coordinateSystem(preserveAspectRatio=false, extent={{-100,-40},{100,40}})));
+    textString="1D-Hygro-thermal building model with 1 zone under real weather data")}),
+    Icon(coordinateSystem(preserveAspectRatio=false, extent={{-100,-40},{100,40}})),
+Documentation(info="<html>
+<p>
+Example that simulates a hygro-thermal building model with 1 zone, based on 1D-discretized building elements.
+</p>
+</html>",
+revisions="<html>
+<ul>
+<li>
+May 21, 2016, by Christoph Nytsch-Geusen:<br/>
+First implementation.
+</li>
+</ul>
+</html>"));
 end BuildingHygroThermal1Zone1D;

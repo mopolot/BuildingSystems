@@ -5,7 +5,7 @@ model WindowWithAirpathes
   BuildingSystems.Buildings.Constructions.Windows.Window window(
     height=2.0,
     width=1.0,
-    UValue=0.5,
+    UVal=0.5,
     calcAirchange=true)
     annotation (Placement(transformation(extent={{-10,-10},{10,10}})));
   BuildingSystems.Buildings.Surfaces.SurfaceToAir surface1
@@ -15,7 +15,7 @@ model WindowWithAirpathes
     nAirpathes=2,
     heightAirpath={0.5,1.5},
     gridSurface={{1,1}},
-    weatherDataFile=BuildingSystems.Climate.WeatherDataMeteonorm.WeatherDataFile_USA_SanFrancisco())
+    redeclare BuildingSystems.Climate.WeatherDataMeteonorm.WeatherDataFile_USA_SanFrancisco weatherDataFile)
     annotation (Placement(transformation(extent={{-50,-10},{-30,10}})));
   Zones.ZoneTemplateAirvolumeMixed zone(
     nConstructions1=1,
@@ -91,6 +91,20 @@ equation
   annotation(experiment(StartTime=0, StopTime=4500.0),
     __Dymola_Commands(file="modelica://BuildingSystems/Resources/Scripts/Dymola/Buildings/Constructions/Examples/WindowWithAirPathes.mos" "Simulate and plot"),
     Diagram(coordinateSystem(preserveAspectRatio=false, extent={{-60,-40},{60,40}}), graphics={
-    Text(extent={{-52,6},{52,-62}},lineColor={0,0,255},textString="Window model with two airpathes under real weather data")}),
-    Icon(coordinateSystem(preserveAspectRatio=false, extent={{-100,-40},{100,40}})));
+    Text(extent={{-52,6},{52,-62}},lineColor={0,0,255},
+    textString="Window model with two airpathes under real weather data")}),
+    Icon(coordinateSystem(preserveAspectRatio=false, extent={{-100,-40},{100,40}})),
+Documentation(info="<html>
+<p>
+Example that simulates a window model with two airpathes under real weather data.
+</p>
+</html>",
+revisions="<html>
+<ul>
+<li>
+May 21, 2016, by Christoph Nytsch-Geusen:<br/>
+First implementation.
+</li>
+</ul>
+</html>"));
 end WindowWithAirpathes;

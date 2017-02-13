@@ -1,26 +1,27 @@
 within BuildingSystems.Applications.HeatingSystems;
-model SolarHeatingSystem "Solar heating system"
+model SolarHeatingSystem
+  "Solar heating system"
   extends Modelica.Icons.Example;
   package Medium = BuildingSystems.Media.Water;
   parameter Modelica.SIunits.MassFlowRate m_flow_nominal= 0.1;
   BuildingSystems.Buildings.Ambient ambient(
     nSurfaces=building.nSurfacesAmbient,
-    weatherDataFile=BuildingSystems.Climate.WeatherDataMeteonorm.WeatherDataFile_USA_SanFrancisco())
+    redeclare BuildingSystems.Climate.WeatherDataMeteonorm.WeatherDataFile_USA_SanFrancisco weatherDataFile)
     "Ambient model"
     annotation (Placement(transformation(extent={{-26,42},{-6,62}})));
   BuildingSystems.Buildings.BuildingTemplates.Building1Zone0D building(
-    AAmbient=2*(2*10+2*6.0)*2.8+10.0*6.0,
-    AInner=10*10,
-    AGround=10*10,
+    AAmb=2*(2*10+2*6.0)*2.8+10.0*6.0,
+    AInn=10*10,
+    AGro=10*10,
     nWindows=1,
-    AWindow={2*3},
+    AWin={2*3},
     VAir=2*10.0*6.0*2.8,
-    CAmbient=100000,
-    CInner=100000,
-    CGround=100000,
-    UAmbient=0.2,
-    UInner=1.0,
-    UGround=0.2,
+    CAmb=100000,
+    CInn=100000,
+    CGro=100000,
+    UValAmb=0.2,
+    UValInn=1.0,
+    UValGro=0.2,
     calcIdealLoads=false,
     heatSources=true,
     nHeatSources=1,
@@ -31,9 +32,10 @@ model SolarHeatingSystem "Solar heating system"
     k=0.5)
     annotation (Placement(transformation(extent={{-2,-2},{2,2}},rotation=180,origin={38,56})));
   BuildingSystems.Fluid.Storage.ExpansionVessel exp1(
-    redeclare package Medium = Medium, V_start=0.1) "Expansion vessel model"
+    redeclare package Medium = Medium, V_start=0.1)
+    "Expansion vessel model"
     annotation (Placement(transformation(extent={{20,-54},{32,-42}})));
-  Fluid.FixedResistances.Pipe  pip1(
+  BuildingSystems.Fluid.FixedResistances.Pipe  pip1(
     redeclare package Medium = Medium,
     m_flow_nominal=m_flow_nominal,
     nNodes=2,
@@ -56,14 +58,15 @@ model SolarHeatingSystem "Solar heating system"
     VWat=0.005,
     mDry=0.0001,
     nEle=5,
-    fraRad=0,
+    fraRad=0.5,
     T_a_nominal=273.15 + 90.0,
     T_b_nominal=273.15 + 70,
     TAir_nominal=273.15 + 20.0,
     n=1.3,
-    energyDynamics=Modelica.Fluid.Types.Dynamics.FixedInitial) "radiator model"
+    energyDynamics=Modelica.Fluid.Types.Dynamics.FixedInitial)
+    "radiator model"
     annotation (Placement(transformation(extent={{-12,-22},{8,-2}})));
-  Fluid.FixedResistances.Pipe pip2(
+  BuildingSystems.Fluid.FixedResistances.Pipe pip2(
     redeclare package Medium = Medium,
     m_flow_nominal=m_flow_nominal,
     nNodes=2,
@@ -74,7 +77,7 @@ model SolarHeatingSystem "Solar heating system"
     annotation (Placement(transformation(extent={{-16,-70},{-36,-50}})));
   Modelica.Blocks.Sources.Constant TSet(k=273.15 + 60.0)
     annotation (Placement(transformation(extent={{18,-56},{14,-52}})));
-  Fluid.FixedResistances.Pipe pip3(
+  BuildingSystems.Fluid.FixedResistances.Pipe pip3(
     redeclare package Medium = Medium,
     m_flow_nominal=m_flow_nominal,
     nNodes=2,
@@ -86,7 +89,8 @@ model SolarHeatingSystem "Solar heating system"
     annotation (Placement(transformation(extent={{-60,-2},{-40,-22}})));
   BuildingSystems.Fluid.Actuators.Valves.Data.Generic datVal(
     y={0,0.1667,0.3333,0.5,0.6667,1},
-    phi={0, 0.19, 0.35, 0.45, 0.5, 0.65}/0.65) "Valve characteristics"
+    phi={0, 0.19, 0.35, 0.45, 0.5, 0.65}/0.65)
+    "Valve characteristics"
     annotation (Placement(transformation(extent={{-80,22},{-60,42}})));
   BuildingSystems.Fluid.Actuators.Valves.TwoWayTable val(
     redeclare package Medium = Medium,
@@ -103,13 +107,15 @@ model SolarHeatingSystem "Solar heating system"
     controllerType=Modelica.Blocks.Types.SimpleController.P,
     yMax=1.0,
     yMin=0.0,
-    wp=1.0) "Thermostat, modelled by a limeted p-controller"
+    wp=1.0)
+    "Thermostat, modelled by a limeted p-controller"
     annotation (Placement(transformation(extent={{4,-4},{-4,4}},rotation=90,origin={-26,18})));
   BuildingSystems.Fluid.Movers.FlowControlled_dp pump1(
     redeclare package Medium =Medium, m_flow_nominal=m_flow_nominal)
     annotation (Placement(transformation(extent={{-84,-22},{-64,-2}})));
   Modelica.Blocks.Sources.Constant dpSet(
-    k=12000.0) "Set presure for the pump model"
+    k=12000.0)
+    "Set presure for the pump model"
     annotation (Placement(transformation(extent={{-68,6},{-72,10}})));
   Modelica.Blocks.Sources.Constant TAirSet(
     k=273.15 + 20.0)
@@ -117,50 +123,48 @@ model SolarHeatingSystem "Solar heating system"
   Modelica.Thermal.HeatTransfer.Sources.FixedTemperature TAmb(
     each T=293.15)
     annotation (Placement(transformation(extent={{-72,-46},{-60,-34}})));
-  Technologies.ThermalStorages.FluidStorage storage(
+  BuildingSystems.Technologies.ThermalStorages.FluidStorage storage(
     HX_2=false,
     AdditionalFluidPorts=true,
     nEle=10,
     HX_1=true,
     V=1.0,
     height = 2.0,
-    redeclare
-      BuildingSystems.Technologies.ThermalStorages.BaseClasses.BuoyancyModels.Buoyancy1
-                                                                                                HeatBuoyancy,
+    redeclare BuildingSystems.Technologies.ThermalStorages.BaseClasses.BuoyancyModels.Buoyancy1 HeatBuoyancy,
     redeclare package Medium = Medium)
     annotation (Placement(transformation(extent={{38,-40},{58,-20}})));
-  Technologies.SolarThermal.ThermalCollector collector(
+  BuildingSystems.Technologies.SolarThermal.ThermalCollector collector(
     redeclare package Medium = Medium,
     angleDegAzi=0,
     angleDegTil=30,
     m_flow_nominal=m_flow_nominal,
     dp_nominal=10,
-    redeclare
-      BuildingSystems.Technologies.SolarThermal.Data.Collectors.ComercialsCollectors.FlatPlate.AgenaAZUR8plus_AC28H
-                                                                                                          collectorData)
+    redeclare BuildingSystems.Technologies.SolarThermal.Data.Collectors.ComercialsCollectors.FlatPlate.AgenaAZUR8plus_AC28H collectorData)
     annotation (Placement(transformation(extent={{92,-24},{112,-4}})));
-  Fluid.Movers.FlowControlled_m_flow pump2(redeclare package Medium = Medium,
+  BuildingSystems.Fluid.Movers.FlowControlled_m_flow pump2(redeclare package Medium = Medium,
     m_flow_nominal=0.1)
     annotation (Placement(transformation(extent={{84,-70},{64,-50}})));
-  Fluid.FixedResistances.Pipe  pip4(
+  BuildingSystems.Fluid.FixedResistances.Pipe  pip4(
     redeclare package Medium = Medium,
     m_flow_nominal=m_flow_nominal,
     nNodes=2,
     thicknessIns=0.02,
     lambdaIns=0.04,
     length=1,
-    diameter=0.02) "Pipe model"
+    diameter=0.02)
+    "Pipe model"
     annotation (Placement(transformation(extent={{62,-4},{82,-24}})));
-  Fluid.FixedResistances.Pipe pip5(
+  BuildingSystems.Fluid.FixedResistances.Pipe pip5(
     redeclare package Medium = Medium,
     m_flow_nominal=m_flow_nominal,
     nNodes=2,
     thicknessIns=0.02,
     lambdaIns=0.04,
     length=1,
-    diameter=0.02) "Pipe model"
+    diameter=0.02)
+    "Pipe model"
     annotation (Placement(transformation(extent={{94,-50},{114,-70}})));
-  Climate.SolarRadiationTransformers.SolarRadiationTransformerIsotropicSky
+  BuildingSystems.Climate.SolarRadiationTransformers.SolarRadiationTransformerIsotropicSky
     radiation(
     rhoAmb=0.2,
     latitudeDeg=13,
@@ -252,7 +256,7 @@ equation
       points={{-24.2,26},{-26,26},{-26,22.8}},
       color={0,0,127},
       smooth=Smooth.None));
-  connect(rad.heatPortCon, building.heatSourcesPorts[1]) annotation (Line(
+  connect(rad.heatPortCon, building.conHeatSourcesPorts[1]) annotation (Line(
       points={{-4,-4.8},{-4,68},{16.2,68},{16.2,62}},
       color={191,0,0},
       smooth=Smooth.None));
@@ -318,7 +322,6 @@ equation
           -42.4},{122,-80},{38,-80},{38,-24.9},{40.6,-24.9}}, color={0,0,127}));
   connect(collector.TSeg[10], add.u1) annotation (Line(points={{105.2,-23.9},{122,
           -23.9},{122,-37.6},{114.8,-37.6}},      color={0,0,127}));
-
   connect(storage.port_HX_1_b, pump2.port_b) annotation (Line(
       points={{55,-36},{60,-36},{60,-60},{64,-60}},
       color={0,127,255},
@@ -327,11 +330,26 @@ equation
       points={{55,-34},{60,-34},{60,-14},{62,-14}},
       color={0,127,255},
       smooth=Smooth.None));
+  connect(rad.heatPortRad, building.radHeatSourcesPorts[1]) annotation (Line(
+      points={{0,-4.8},{0,-4.8},{0,68},{17,68},{17,62}}, color={191,0,0}));
+
   annotation(experiment(StartTime=0, StopTime=31536000),
-    __Dymola_Commands(file="modelica://BuildingSystems/Resources/Scripts/Dymola/Applications/HeatingSystems/SolarHeatingSystem.mos"
-        "Simulate and plot"),
-    Diagram(coordinateSystem(preserveAspectRatio=false, extent={{-100,-100},{
-            140,100}}),                                                                  graphics={
+    __Dymola_Commands(file="modelica://BuildingSystems/Resources/Scripts/Dymola/Applications/HeatingSystems/SolarHeatingSystem.mos" "Simulate and plot"),
+    Diagram(coordinateSystem(preserveAspectRatio=false, extent={{-100,-100},{140,100}}),                                                                  graphics={
     Text(extent={{-56,-54},{48,-122}}, lineColor={0,0,255}, textString="Solar heating system with simplified thermal building model")}),
-    Icon(coordinateSystem(preserveAspectRatio=false, extent={{-100,-40},{100,40}})));
+    Icon(coordinateSystem(preserveAspectRatio=false, extent={{-100,-40},{100,40}})),
+Documentation(info="<html>
+<p>
+Example that simulates a solar thermal system which supplies a building with heating energy.
+A boiler add the backup energy which cannot delivered by the solar collector.
+</p>
+</html>",
+revisions="<html>
+<ul>
+<li>
+May 21, 2016, by Christoph Nytsch-Geusen:<br/>
+First implementation.
+</li>
+</ul>
+</html>"));
 end SolarHeatingSystem;

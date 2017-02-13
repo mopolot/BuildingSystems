@@ -10,10 +10,10 @@ model WallHygroThermal1DNodes
     nNodes={10,10,10},
     constructionData=construction)
     annotation (Placement(transformation(extent={{-10,-10},{10,10}})));
-  Buildings.Surfaces.SurfaceToAir surface1
+  BuildingSystems.Buildings.Surfaces.SurfaceToAir surface1
     annotation (Placement(transformation(extent={{-2,-10},{-22,10}})));
   BuildingSystems.Buildings.Ambient ambient(
-    weatherDataFile=BuildingSystems.Climate.WeatherDataMeteonorm.WeatherDataFile_USA_SanFrancisco(),
+    redeclare BuildingSystems.Climate.WeatherDataMeteonorm.WeatherDataFile_USA_SanFrancisco weatherDataFile,
     nSurfaces=1)
     annotation (Placement(transformation(extent={{-50,-10},{-30,10}})));
   BuildingSystems.Buildings.Data.Constructions.OpaqueHygroThermalConstruction construction(
@@ -23,11 +23,11 @@ model WallHygroThermal1DNodes
     BuildingSystems.HAM.Data.MaterialProperties.HygroThermal.Vollziegel(),
     BuildingSystems.HAM.Data.MaterialProperties.HygroThermal.Kalkputz()})
     annotation(Placement(transformation(extent={{-10,20},{10,40}})));
-  Surfaces.SurfaceToSolid surface2(calcHygroThermal=true)
+  BuildingSystems.Buildings.Surfaces.SurfaceToSolid surface2(calcHygroThermal=true)
     annotation (Placement(transformation(extent={{2,-10},{22,10}})));
   Modelica.Thermal.HeatTransfer.Sources.FixedTemperature tempBC(T=293.15)
     annotation (Placement(transformation(extent={{26,-10},{18,-2}})));
-  HAM.HeatAndMoistureTransport.Sources.AbsoluteMoistureFixed moistBC(
+  BuildingSystems.HAM.HeatAndMoistureTransport.Sources.AbsoluteMoistureFixed moistBC(
     x_constant =0.008)
     annotation (Placement(transformation(extent={{28,0},{16,12}})));
 equation
@@ -64,5 +64,18 @@ equation
     __Dymola_Commands(file="modelica://BuildingSystems/Resources/Scripts/Dymola/Buildings/Constructions/Examples/WallHygroThermal1DNodes.mos" "Simulate and plot"),
     Diagram(coordinateSystem(preserveAspectRatio=false, extent={{-60,-40},{60,40}}),                                                                       graphics={Text(extent={{-52,6},{52,-62}},lineColor={0,0,255},
     textString="1D hygro-thermal wall model under real weather data")}),
-    Icon(coordinateSystem(preserveAspectRatio=false, extent={{-100,-40},{100,40}})));
+    Icon(coordinateSystem(preserveAspectRatio=false, extent={{-100,-40},{100,40}})),
+Documentation(info="<html>
+<p>
+Example that simulates a 1D-layered hygro-thermal wall model under real weather data
+</p>
+</html>",
+revisions="<html>
+<ul>
+<li>
+May 21, 2016, by Christoph Nytsch-Geusen:<br/>
+First implementation.
+</li>
+</ul>
+</html>"));
   end WallHygroThermal1DNodes;

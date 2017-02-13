@@ -3,7 +3,6 @@ model Pipe
   "Pipe with 1D discretisation along flow direction"
   extends BuildingSystems.Fluid.Interfaces.LumpedVolumeDeclarations;
   extends BuildingSystems.Fluid.Interfaces.PartialTwoPortInterface(
-  showDesignFlowDirection = false,
   final show_T=true);
   extends BuildingSystems.Fluid.Interfaces.TwoPortFlowResistanceParameters(
     final computeFlowResistance=(abs(dp_nominal) > Modelica.Constants.eps),
@@ -23,15 +22,17 @@ model Pipe
     annotation (Dialog(tab="Flow resistance"));
   parameter Boolean useMultipleHeatPorts=false
     "= true to use one heat port for each segment of the pipe, false to use a single heat port for the entire pipe";
-  BuildingSystems.Fluid.FixedResistances.FixedResistanceDpM res(
+  parameter Boolean useExternalHeatSource=false
+    "= true to transfer the volume temperature to the outter interface (heatPort)"
+    annotation (Dialog(tab="Advanced"));
+  BuildingSystems.Fluid.FixedResistances.HydraulicDiameter res(
     redeclare final package Medium = Medium,
     final from_dp=from_dp,
-    use_dh=true,
     dh=diameter,
     dp(nominal=length*10),
+    final length=length,
     final show_T=show_T,
     final m_flow_nominal=m_flow_nominal,
-    final dp_nominal=dp_nominal,
     final allowFlowReversal=allowFlowReversal,
     final linearized=linearizeFlowResistance,
     final ReC=ReC)
@@ -51,12 +52,11 @@ model Pipe
     each C_start=C_start,
     each C_nominal=C_nominal,
     each final m_flow_small=m_flow_small,
-    each final allowFlowReversal=allowFlowReversal)
-    "Volume for pipe fluid"
-    annotation (Placement(transformation(extent={{-1,-18},{19,-38}})));
+    each final allowFlowReversal=allowFlowReversal) "Volume for pipe fluid"
+    annotation (Placement(transformation(extent={{71,-18},{91,-38}})));
   Modelica.Thermal.HeatTransfer.Components.ThermalConductor conPipWal[nNodes](
-      each G=2*Modelica.Constants.pi*lambdaIns*length/nNodes/Modelica.Math.log((
-        diameter/2.0 + thicknessIns)/(diameter/2.0)))
+    each G=2*Modelica.Constants.pi*lambdaIns*length/nNodes/Modelica.Math.log((
+    diameter/2.0 + thicknessIns)/(diameter/2.0))) if  not useExternalHeatSource
     "Thermal conductance through pipe wall"
     annotation (Placement(transformation(extent={{-28,-38},{-8,-18}})));
   Modelica.Thermal.HeatTransfer.Components.ThermalCollector colAllToOne(m=nNodes) if not useMultipleHeatPorts
@@ -74,7 +74,8 @@ protected
   parameter Medium.ThermodynamicState state_default = Medium.setState_pTX(
     T=Medium.T_default,
     p=Medium.p_default,
-    X=Medium.X_default[1:Medium.nXi]) "Default state";
+    X=Medium.X_default[1:Medium.nXi])
+    "Default state";
   parameter Modelica.SIunits.Density rho_default = Medium.density(state_default);
   parameter Modelica.SIunits.DynamicViscosity mu_default = Medium.dynamicViscosity(state_default)
     "Dynamic viscosity at nominal condition";
@@ -94,6 +95,10 @@ protected
     roughness=roughness,
     m_flow_small=m_flow_small)
     "Pressure loss of a straight pipe at m_flow_nominal";
+public
+  Modelica.Thermal.HeatTransfer.Components.ThermalCollector thermalCollector1[nNodes](
+    each m=1) if useExternalHeatSource
+    annotation (Placement(transformation(extent={{-10,10},{10,-10}},rotation=-90,origin={50,-50})));
 equation
   connect(port_a, res.port_a) annotation (Line(
       points={{-100,5.55112e-16},{-72,5.55112e-16},{-72,1.16573e-15},{-58,
@@ -101,18 +106,18 @@ equation
       color={0,127,255},
       smooth=Smooth.None));
   connect(res.port_b, vol[1].ports[1]) annotation (Line(
-      points={{-10,6.10623e-16},{7,6.10623e-16},{7,-18}},
+      points={{-10,6.10623e-016},{79,6.10623e-016},{79,-18}},
       color={0,127,255},
       smooth=Smooth.None));
   for i in 1:(nNodes - 1) loop
     connect(vol[i].ports[2], vol[i + 1].ports[1]);
   end for;
   connect(vol[nNodes].ports[2], port_b) annotation (Line(
-      points={{11,-18},{12,-18},{12,5.55112e-16},{100,5.55112e-16}},
+      points={{83,-18},{82,-18},{82,0},{100,0}},
       color={0,127,255},
       smooth=Smooth.None));
   connect(conPipWal.port_b, vol.heatPort) annotation (Line(
-      points={{-8,-28},{-1,-28}},
+      points={{-8,-28},{71,-28}},
       color={191,0,0},
       smooth=Smooth.None));
   if useMultipleHeatPorts then
@@ -130,6 +135,18 @@ equation
         color={191,0,0},
         smooth=Smooth.None));
   end if;
+  connect(thermalCollector1.port_b, vol.heatPort) annotation (Line(
+      points={{60,-50},{71,-50},{71,-28}},
+      color={191,0,0},
+      smooth=Smooth.None));
+  connect(thermalCollector1[1].port_a, heatPorts) annotation (Line(
+      points={{40,-50},{0.5,-50},{0.5,-60}},
+      color={191,0,0},
+      smooth=Smooth.None));
+  connect(thermalCollector1[1].port_a, colAllToOne.port_a) annotation (Line(
+      points={{40,-50},{-50,-50},{-50,4}},
+      color={191,0,0},
+      smooth=Smooth.None));
   annotation (defaultComponentName="pip",Icon(graphics={
     Rectangle(
       extent={{-100,60},{100,-60}},
@@ -181,5 +198,6 @@ equation
     First implementation.
     </li>
     </ul>
-    </html>"));
+    </html>"),
+    Diagram(coordinateSystem(preserveAspectRatio=false, extent={{-100,-100},{100,100}}), graphics));
 end Pipe;

@@ -2,7 +2,6 @@ within BuildingSystems.Technologies.SolarThermal;
 model ThermalCollector
   "Model of a solar thermal collector"
   extends BuildingSystems.Fluid.Interfaces.PartialTwoPortInterface(
-    showDesignFlowDirection = false,
     show_T=true);
   BuildingSystems.Fluid.MixingVolumes.MixingVolume[nEle] vol(
     redeclare each package Medium = Medium,
@@ -56,7 +55,7 @@ model ThermalCollector
   replaceable BuildingSystems.Technologies.SolarThermal.Data.Collectors.CollectorPartial collectorData
     "Data about the thermal solar collector"
     annotation(HideResult=true, Dialog(tab = "General"), Evaluate=true, choicesAllMatching=true);
-  BuildingSystems.Fluid.FixedResistances.FixedResistanceDpM res(
+  BuildingSystems.Fluid.FixedResistances.PressureDrop res(
     m_flow_nominal=m_flow_nominal,
     redeclare package Medium = Medium,
     dp_nominal=dp_nominal,
@@ -181,7 +180,7 @@ equation
       color={191,0,0},
       smooth=Smooth.None));
 
-  annotation ( Icon(coordinateSystem(
+  annotation (defaultComponentName="collector", Icon(coordinateSystem(
     preserveAspectRatio=false, extent={{-100,-100},{100,100}}), graphics={
     Polygon(
       points={{-54,80},{96,80},{56,-80},{-94,-80},{-54,80}},
@@ -223,18 +222,18 @@ equation
     Documentation(info="<html>
       <p>This model is a general solar thermal collector. </p>
       <h4>Main equations</h4>
-      <p>Calculation of the total incident solar radiation, I<sub>tot</sub>, is defined as follows.<b> </b></p>
+      <p>Calculation of the total incident solar radiation, I<sub>tot</sub>, is defined as follows.</p>
       <p align=\"center\"><i>
       I<sub>tot</sub> = I<sub>dir</sub> *(1-GSC)*IAM+I<sub>dif</sub> </i></p>
     <p>
     where I<sub>dir</sub> and I<sub>dif</sub> are the total direct and diffuse irradiation on the absorption surface in W/m2 respectively.
     GSC is the geometrical shading coefficient for the direct irradiation and IAM the incidence angle modifier.
     </p>
-      <p> Calculation of incidence angle modifier, <b> </b></p>
+      <p> Calculation of incidence angle modifier,</p>
       <p align=\"center\"><i>
       IAM = 1 + (IAMC-1)/0.5557*(1/cos(&theta;)-1) </i></p>
       <p> where &theta; is the angle between the normal to the collector surface and the incident irradiation.
-      IAMC is the incidence angle modifier evaluated at <code>&theta;=50 deg</code>. <b> </b></p>
+      IAMC is the incidence angle modifier evaluated at <code>&theta;=50 deg</code>. </p>
 
     <h4>Typical use and important parameters</h4>
     <p>

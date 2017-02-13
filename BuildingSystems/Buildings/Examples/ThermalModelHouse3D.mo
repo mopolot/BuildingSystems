@@ -364,8 +364,8 @@ model ThermalModelHouse3D "Model of the thermal model house in 3D description."
           smooth=Smooth.None));
 
       // + Bottom To Ground (2)
-      connect(bottom1.heatSourcePorts[2,2],heatSourcesPorts[1]);
-      connect(bottom2.heatSourcePorts[2,2],heatSourcesPorts[2]);
+      connect(bottom1.heatSourcePorts[2,2],conHeatSourcesPorts[1]);
+      connect(bottom2.heatSourcePorts[2,2],conHeatSourcesPorts[2]);
 
   end Building;
 
@@ -420,7 +420,7 @@ model ThermalModelHouse3D "Model of the thermal model house in 3D description."
     BuildingSystems.Buildings.Ambient ambient(
       nSurfaces=building.nSurfacesAmbient,
       gridSurface=building.gridSurface,
-      weatherDataFile= BuildingSystems.Climate.WeatherDataMeteonorm.WeatherDataFile_USA_SanFrancisco())
+      redeclare BuildingSystems.Climate.WeatherDataMeteonorm.WeatherDataFile_USA_SanFrancisco weatherDataFile)
       annotation (Placement(transformation(extent={{-30,-10},{-10,10}})));
     Modelica.Thermal.HeatTransfer.Sources.PrescribedHeatFlow heatingZone1
       annotation (Placement(transformation(extent={{-5,-5},{5,5}},rotation=270,origin={17,21})));
@@ -448,29 +448,33 @@ equation
         points={{27.8,30},{25,30},{25,26}},
         color={0,0,127},
         smooth=Smooth.None));
-    connect(heatingZone1.port, building.heatSourcesPorts[1]) annotation (Line(
-        points={{17,16},{20.7,16},{20.7,10}},
-        color={191,0,0},
-        smooth=Smooth.None));
-    connect(heatingZone2.port, building.heatSourcesPorts[2]) annotation (Line(
-        points={{25,16},{22,16},{22,10},{23.7,10}},
-        color={191,0,0},
-        smooth=Smooth.None));
+    connect(heatingZone1.port, building.conHeatSourcesPorts[1]) annotation (Line(
+            points={{17,16},{18,16},{18,12},{20,12},{20,9.5}}, color={191,0,0}));
+    connect(heatingZone2.port, building.conHeatSourcesPorts[2]) annotation (Line(
+            points={{25,16},{26,16},{26,12},{20,12},{20,10.5}}, color={191,0,0}));
 
   annotation(experiment(StopTime=86400, __Dymola_Algorithm="Cvode"),
     __Dymola_Commands(file="modelica://BuildingSystems/Resources/Scripts/Dymola/Buildings/Examples/ThermalModelHouse3D.mos"
         "Simulate and plot"),
     Diagram(coordinateSystem(preserveAspectRatio=false, extent={{-100,-40},{100,40}}), graphics={Text(extent={{-52,6},{52,-62}},lineColor={0,0,255},
     textString="Model of the thermal model house in a 3D description")}),Icon(coordinateSystem(preserveAspectRatio=false, extent={{-100,-40},{100,40}})),
-    Documentation(
-     info="<html>
+Documentation(
+ info="<html>
 <p>Model of the thermal model house in a 3D description</p>
 <ul>
 <li>(Left-) Zone 1: equidistant discretised walls, 1D airvolume.</li>
 <li>(Right-) Zone 2: equidistant discretised walls, 3D equidistant discretised airvolume (4x4x4).</li>
 <li>Interconnecting wall (wall7): equidistant discretised wall (4x4)</li>
 </ul>
-<p><br><br><img src=\"modelica://BuildingSystems/Resources/Images/Airvolume3Ddoc/therModelhouse/modelhouseFas.JPG\" alt=\"ThermalModelhouse\"/></p>
+<p><br/><br/><img src=\"modelica://BuildingSystems/Resources/Images/Airvolume3Ddoc/therModelhouse/modelhouseFas.JPG\" alt=\"ThermalModelhouse\"/></p>
 <p>Further Informations about the thermal modelhouse could be found here:<a href=\"http://www.thermisches-modellhaus.de/sites/Home.html\"> www.thermisches-modellhaus.de</a></p>
+</html>",
+revisions="<html>
+<ul>
+<li>
+May 21, 2016, by Katharina Mucha:<br/>
+First implementation.
+</li>
+</ul>
 </html>"));
 end ThermalModelHouse3D;

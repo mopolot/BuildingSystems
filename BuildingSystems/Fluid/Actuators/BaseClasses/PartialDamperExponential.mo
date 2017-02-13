@@ -120,7 +120,7 @@ models.
 <p>
 For a description of the opening characteristics and typical parameter values, see the damper model
 <a href=\"modelica://BuildingSystems.Fluid.Actuators.Dampers.Exponential\">
-Exponential</a>.
+BuildingSystems.Fluid.Actuators.Dampers.Exponential</a>.
 </p>
 </html>",
 revisions="<html>
@@ -146,7 +146,7 @@ To simplify object inheritance tree, revised base classes
 <code>BuildingSystems.Fluid.Actuators.BaseClasses.PartialDamperExponential</code>,
 <code>BuildingSystems.Fluid.Actuators.BaseClasses.PartialActuator</code>
 and model
-<code>BuildingSystems.Fluid.FixedResistances.FixedResistanceDpM</code>.
+<code>BuildingSystems.Fluid.FixedResistances.PressureDrop</code>.
 </li>
 <li>
 August 5, 2011, by Michael Wetter:<br/>

@@ -38,7 +38,7 @@ model Window
     geo.point.z={0.0,0.0,0.0,0.0},
     epsilon = fill(epsilon_1,nY,nZ))
     annotation (Placement(transformation(extent={{-30,-10},{-10,10}}), iconTransformation(extent={{-30,-10},{-10,10}})));
-  parameter Real framePortion = 0.1
+  parameter Real framePortion = 0.2
     "Frame portion of the window"
     annotation(Dialog(tab = "General", group = "Geometry"));
   parameter Modelica.SIunits.Length thicknessPane = 0.006
@@ -49,7 +49,7 @@ model Window
   parameter Modelica.SIunits.SpecificHeatCapacity cPane = 1000.0
     "Specific heat capacity of the panes"
     annotation(Dialog(tab = "General", group = "Thermal properties"));
-  parameter Modelica.SIunits.CoefficientOfHeatTransfer UValue = 3.0
+  parameter Modelica.SIunits.CoefficientOfHeatTransfer UVal = 3.0
     "Mean U-value of the window"
     annotation(Dialog(tab = "General", group = "Thermal properties"));
   parameter Real tauDir0 = 0.7
@@ -63,15 +63,24 @@ model Window
   parameter Real fShadow = 0.0
     "Shadowing coefficient"
     annotation(Dialog(tab = "General", group = "Optical properties"));
-  parameter Modelica.SIunits.Temp_K T_start=293.15
-    "Start temperature of the window"
-    annotation (Dialog(tab="Initialization"));
   parameter Boolean calcAirchange = false
     "True: calculation of air exchange through the window, false: no air exchange"
     annotation(Dialog(tab = "General", group = "Air change calculation"));
   parameter BuildingSystems.Types.CoefficientOfAirChange aF = 1.0
     "Joint coefficient"
     annotation(Dialog(tab = "General", group = "Air change calculation"));
+  parameter Boolean show_TSur = false
+    "Show surface temperatures on both sides"
+    annotation(Dialog(tab = "Advanced", group = "Surface variables"));
+  BuildingSystems.Interfaces.Temp_KOutput TSur_1 = toSurfacePort_1.heatPort[1,1].T if show_TSur
+    "Temperature on surface side 1"
+    annotation (Placement(transformation(extent={{-10,-10},{10,10}},rotation=180,origin={-46,10}),iconTransformation(extent={{-10,10},{-30,30}})));
+  BuildingSystems.Interfaces.Temp_KOutput TSur_2 = toSurfacePort_2.heatPort[1,1].T if show_TSur
+    "Temperature on surface side 2"
+    annotation (Placement(transformation(extent={{-10,-10},{10,10}},rotation=0,origin={46,10}),iconTransformation(extent={{10,10},{30,30}})));
+  parameter Modelica.SIunits.Temp_K T_start=293.15
+    "Start temperature of the window"
+    annotation (Dialog(tab="Initialization"));
   BuildingSystems.Buildings.Constructions.Windows.RadiationTransmission.RadiationTransmissionSimple radTra1to2(
     tauDir0=tauDir0,
     b0=b0,
@@ -88,7 +97,7 @@ model Window
    annotation (Placement(transformation(extent={{-10,-50},{10,-30}})));
   BuildingSystems.HAM.HeatConduction.HeatConduction1D heatTransfer(
     material(
-      lambda = UValue*thicknessPane,
+      lambda = UVal*thicknessPane,
       rho = rhoPane,
       c = cPane),
     lengthX=thicknessPane,
@@ -194,7 +203,7 @@ equation
       pattern=LinePattern.Solid,
       smooth=Smooth.None));
 
-  annotation (Icon(coordinateSystem(preserveAspectRatio=false, extent={{-100,-100},{100,100}}), graphics={
+  annotation (defaultComponentName="window", Icon(coordinateSystem(preserveAspectRatio=false, extent={{-100,-100},{100,100}}), graphics={
     Rectangle(extent={{-10,80},{10,-80}},lineColor={230,230,230},fillColor={230,230,230},fillPattern = FillPattern.Solid),
     Rectangle(extent={{6,80},{10,-80}},lineColor={170,255,255},fillColor={170,255,255},fillPattern = FillPattern.Solid),
     Rectangle(extent={{-10,80},{-6,-80}}, lineColor={170,255,255},fillColor={170,255,255},fillPattern = FillPattern.Solid),

@@ -6,13 +6,14 @@ model CompressionChiller
     final computeFlowResistance1=(dp1_nominal > Modelica.Constants.eps),
     final computeFlowResistance2=(dp2_nominal > Modelica.Constants.eps));
   replaceable parameter BuildingSystems.Technologies.Chillers.Data.CompressionChillers.CompressionChillerGeneral chillerData
-  "Characteristic data of the chiller"
-  annotation(Dialog(tab = "General"),Evaluate=true, choicesAllMatching=true);
+    "Characteristic data of the chiller"
+    annotation(Dialog(tab = "General"),Evaluate=true, choicesAllMatching=true);
   Modelica.SIunits.HeatFlowRate Q_flow_eva
     "Heat flow rate of the evaporator";
   Modelica.SIunits.HeatFlowRate Q_flow_con
     "Heat flow rate of the condensor";
-  Real COP "Coefficient of performance of the chiller";
+  Real COP
+    "Coefficient of performance of the chiller";
   Modelica.Blocks.Interfaces.BooleanInput on(start = false)
     annotation(Placement(transformation(extent={{-114,18},{-86,42}}),iconTransformation(extent={{-10,-10},{10,10}}, rotation=-90,origin={-40,76})));
   BuildingSystems.Fluid.MixingVolumes.MixingVolume volCon(
@@ -33,17 +34,15 @@ model CompressionChiller
     p_start=100000,
     T_start=293.15)
     annotation (Placement(transformation(extent={{-10,-10},{10,10}},rotation=270,origin={0,-60})));
-  BuildingSystems.Fluid.FixedResistances.FixedResistanceDpM resCon(
+  BuildingSystems.Fluid.FixedResistances.PressureDrop resCon(
     redeclare final package Medium = Medium1,
-    final use_dh=false,
     final m_flow_nominal=m1_flow_nominal,
     final show_T=false,
     final dp_nominal=dp1_nominal)
     "Flow resistance codenser"
     annotation (Placement(transformation(extent={{-70,50},{-50,70}})));
-  BuildingSystems.Fluid.FixedResistances.FixedResistanceDpM resEva(
+  BuildingSystems.Fluid.FixedResistances.PressureDrop resEva(
     redeclare final package Medium = Medium2,
-    final use_dh=false,
     final m_flow_nominal=m1_flow_nominal,
     final show_T=false,
     final dp_nominal=dp2_nominal)
@@ -107,7 +106,7 @@ equation
     color={191,0,0},
     smooth=Smooth.None));
 
-   annotation (
+   annotation (defaultComponentName="chiller",
     Icon(coordinateSystem(preserveAspectRatio=false,extent={{-100,-100},{100,100}}), graphics={
     Rectangle(
       extent={{-80,80},{80,-80}},

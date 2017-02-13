@@ -10,7 +10,7 @@ model PumpCurveConstruction
   parameter Modelica.SIunits.VolumeFlowRate V_flow_nominal = m_flow_nominal/1000
     "Nominal mass flow rate at zero pump head";
 
-  parameter Modelica.SIunits.Pressure dp_nominal = 10000
+  parameter Modelica.SIunits.PressureDifference dp_nominal = 10000
     "Nominal pump head at zero mass flow rate";
 
   Actuators.Valves.TwoWayLinear val1(
@@ -31,59 +31,51 @@ model PumpCurveConstruction
   BuildingSystems.Fluid.Movers.SpeedControlled_y pum(
     redeclare package Medium = Medium,
     energyDynamics=Modelica.Fluid.Types.Dynamics.SteadyState,
-    dynamicBalance=false,
     filteredSpeed=false,
     per(pressure(
           V_flow={0,0.5*V_flow_nominal,V_flow_nominal},
           dp={dp_nominal,0.5*dp_nominal,0})),
-    inputType=BuildingSystems.Fluid.Types.InputType.Constant,
-    normalized_speed=1)
+    inputType=BuildingSystems.Fluid.Types.InputType.Constant)
     "Pump with 3 data points for the pressure flow relation"
     annotation (Placement(transformation(extent={{40,70},{60,90}})));
 
   BuildingSystems.Fluid.Movers.SpeedControlled_y pum_dp(
     redeclare package Medium = Medium,
     energyDynamics=Modelica.Fluid.Types.Dynamics.SteadyState,
-    dynamicBalance=false,
     filteredSpeed=false,
     per(pressure(
           V_flow={0.5*V_flow_nominal, 0.75*V_flow_nominal, V_flow_nominal},
           dp={0.5*dp_nominal, 0.25*dp_nominal, 0})),
-    inputType=BuildingSystems.Fluid.Types.InputType.Constant,
-    normalized_speed=1)
+    inputType=BuildingSystems.Fluid.Types.InputType.Constant)
     "Pump with 2 data points for the pressure flow relation, with data at dp=0"
     annotation (Placement(transformation(extent={{40,20},{60,40}})));
 
     BuildingSystems.Fluid.Movers.SpeedControlled_y pum_m_flow(
     redeclare package Medium = Medium,
     energyDynamics=Modelica.Fluid.Types.Dynamics.SteadyState,
-    dynamicBalance=false,
     filteredSpeed=false,
     per(pressure(
            V_flow={0, 0.25*V_flow_nominal, 0.5*V_flow_nominal},
            dp={dp_nominal, 0.75*dp_nominal, 0.5*dp_nominal})),
-    inputType=BuildingSystems.Fluid.Types.InputType.Constant,
-    normalized_speed=1)
+    inputType=BuildingSystems.Fluid.Types.InputType.Constant)
     "Pump with 2 data points for the pressure flow relation, with data at m_flow=0"
     annotation (Placement(transformation(extent={{40,-30},{60,-10}})));
 
   BuildingSystems.Fluid.Movers.SpeedControlled_y pum_no(
     redeclare package Medium = Medium,
     energyDynamics=Modelica.Fluid.Types.Dynamics.SteadyState,
-    dynamicBalance=false,
     filteredSpeed=false,
     per(pressure(
           V_flow={0.25*V_flow_nominal,0.5*V_flow_nominal,0.75*V_flow_nominal},
           dp={0.75*dp_nominal,0.5*dp_nominal,0.25*dp_nominal})),
-    inputType=BuildingSystems.Fluid.Types.InputType.Constant,
-    normalized_speed=1)
+    inputType=BuildingSystems.Fluid.Types.InputType.Constant)
     "Pump with 2 data points for the pressure flow relation, with no data at m_flow=0 and dp=0"
     annotation (Placement(transformation(extent={{40,-70},{60,-50}})));
 
   Modelica.Blocks.Sources.Ramp yVal(
-    height=-1,
     duration=1,
-    offset=1) "Input signal for valve"
+    offset=1,
+    height=-0.99) "Input signal for valve"
     annotation (Placement(transformation(extent={{-60,90},{-40,110}})));
 
   Actuators.Valves.TwoWayLinear val2(
@@ -182,6 +174,21 @@ of the pumps have different values. This then tests the correct extrapolation.
 </p>
 </html>", revisions="<html>
 <ul>
+<li>
+December 6, 2016, by Michael Wetter:<br/>
+Relaxed input signal to allow simulation if bounds on min and max values are checked in Dymola.<br/>
+This is for
+<a href=\"https://github.com/iea-annex60/modelica-annex60/issues/606\">#606</a>.
+</li>
+<li>February 20, 2016, by Ruben Baetens:<br/>
+Removal of <code>dynamicBalance</code> as parameter for <code>massDynamics</code> and <code>energyDynamics</code>.
+</li>
+<li>
+January 22, 2016, by Michael Wetter:<br/>
+Corrected type declaration of pressure difference.
+This is
+for <a href=\"https://github.com/iea-annex60/modelica-annex60/issues/404\">#404</a>.
+</li>
 <li>
 January 7, 2015, by Michael Wetter:<br/>
 First implementation.

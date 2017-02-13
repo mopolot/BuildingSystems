@@ -4,7 +4,8 @@ model BuildingThermal1Zone1DCylinder
   extends Modelica.Icons.Example;
 
   BuildingSystems.Buildings.Ambient ambient(
-    nSurfaces=building.nSurfacesAmbient,weatherDataFile=BuildingSystems.Climate.WeatherDataMeteonorm.WeatherDataFile_Germany_Berlin())
+    nSurfaces=building.nSurfacesAmbient,
+    redeclare BuildingSystems.Climate.WeatherDataMeteonorm.WeatherDataFile_Germany_Berlin weatherDataFile)
     annotation (Placement(transformation(extent={{-40,-10},{-20,10}})));
   BuildingSystems.Buildings.BuildingTemplates.Building1Zone1DCylinder building(
     height = 2.8,
@@ -59,5 +60,19 @@ equation
   annotation(experiment(StartTime=0, StopTime=31536000),
     __Dymola_Commands(file="modelica://BuildingSystems/Resources/Scripts/Dymola/Buildings/Examples/BuildingThermal1Zone1DCylinder.mos" "Simulate and plot"),
     Diagram(coordinateSystem(preserveAspectRatio=false, extent={{-60,-60},{60,60}}), graphics={Text(extent={{-52,-18},{52,-86}},lineColor={0,0,255},
-    textString="Predefined 1D-Thermal building model with 1 zone under real weather data")}),Icon(coordinateSystem(preserveAspectRatio=false, extent={{-100,-40},{100,40}})));
+    textString="Predefined 1D-thermal cylindrical shaped building model with 1 zone under real weather data")}),
+    Icon(coordinateSystem(preserveAspectRatio=false, extent={{-100,-40},{100,40}})),
+Documentation(info="<html>
+<p>
+Example that simulates a predefined thermal cylindrical shaped building model with 1 zone, based on 1D-discretized building elements.
+</p>
+</html>",
+revisions="<html>
+<ul>
+<li>
+May 21, 2016, by Christoph Nytsch-Geusen:<br/>
+First implementation.
+</li>
+</ul>
+</html>"));
 end BuildingThermal1Zone1DCylinder;

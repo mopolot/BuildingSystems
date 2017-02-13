@@ -1,6 +1,6 @@
 within BuildingSystems.Utilities.NcDataReader2;
 block NcDataReader
-  extends Modelica.Blocks.Interfaces.MO(nout = size(varNameTime, 1));
+  extends Modelica.Blocks.Interfaces.MO(nout = size(varNameTime,1));
   parameter String varNameTime[:];
   parameter String varNameConstant[:];
   parameter String fileName;
@@ -37,8 +37,6 @@ ERROR | -43 | netcdf  | NetCDF: Attribute not found
 </p>
 <p>
 It may be due to the called function cannot find in the readed <code>.nc</code> file some of the variables defined in <code>varNameTime</code> or <code>varNameConstant</code>.
-</p>
-<p>
 </p>
 
 </html>"));

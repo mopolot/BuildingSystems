@@ -13,7 +13,7 @@ model Window
   BuildingSystems.Buildings.Ambient ambient(
     nSurfaces=2,
     gridSurface={{1,1},{1,1}},
-    weatherDataFile=BuildingSystems.Climate.WeatherDataMeteonorm.WeatherDataFile_USA_SanFrancisco())
+    redeclare BuildingSystems.Climate.WeatherDataMeteonorm.WeatherDataFile_USA_SanFrancisco weatherDataFile)
     annotation (Placement(transformation(extent={{-50,-10},{-30,10}})));
 equation
   connect(surface1.toConstructionPort, window.toSurfacePort_1) annotation (Line(
@@ -50,5 +50,19 @@ equation
   annotation(experiment(StartTime=0, StopTime=31536000,Interval=3600),
     __Dymola_Commands(file="modelica://BuildingSystems/Resources/Scripts/Dymola/Buildings/Constructions/Examples/Window.mos" "Simulate and plot"),
     Diagram(coordinateSystem(preserveAspectRatio=false, extent={{-60,-40},{60,40}}), graphics={Text(extent={{-52,6},{52,-62}},lineColor={0,0,255},
-    textString="Window model under real weather data")}),Icon(coordinateSystem(preserveAspectRatio=false, extent={{-100,-40},{100,40}})));
+    textString="Window model under real weather data")}),
+    Icon(coordinateSystem(preserveAspectRatio=false, extent={{-100,-40},{100,40}})),
+Documentation(info="<html>
+<p>
+Example that simulates a window model under real weather data.
+</p>
+</html>",
+revisions="<html>
+<ul>
+<li>
+May 21, 2016, by Christoph Nytsch-Geusen:<br/>
+First implementation.
+</li>
+</ul>
+</html>"));
 end Window;

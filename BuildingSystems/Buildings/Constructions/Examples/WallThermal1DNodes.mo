@@ -10,13 +10,13 @@ model WallThermal1DNodes
     nNodes={2,2},
     constructionData=construction)
     annotation (Placement(transformation(extent={{-10,-10},{10,10}})));
-  Buildings.Surfaces.SurfaceToAir surface2
+  BuildingSystems.Buildings.Surfaces.SurfaceToAir surface2
     annotation (Placement(transformation(extent={{2,-10},{22,10}})));
-  Buildings.Surfaces.SurfaceToAir surface1
+  BuildingSystems.Buildings.Surfaces.SurfaceToAir surface1
     annotation (Placement(transformation(extent={{-2,-10},{-22,10}})));
   BuildingSystems.Buildings.Ambient ambient(
     nSurfaces=2,
-    weatherDataFile=BuildingSystems.Climate.WeatherDataMeteonorm.WeatherDataFile_USA_SanFrancisco())
+    redeclare BuildingSystems.Climate.WeatherDataMeteonorm.WeatherDataFile_USA_SanFrancisco weatherDataFile)
     annotation (Placement(transformation(extent={{-50,-10},{-30,10}})));
   BuildingSystems.Buildings.Data.Constructions.OpaqueThermalConstruction construction(
   nLayers=2,
@@ -61,5 +61,19 @@ equation
   annotation(experiment(StartTime=0, StopTime=31536000,Interval=3600),
     __Dymola_Commands(file="modelica://BuildingSystems/Resources/Scripts/Dymola/Buildings/Constructions/Examples/WallThermal1DNodes.mos" "Simulate and plot"),
     Diagram(coordinateSystem(preserveAspectRatio=false, extent={{-60,-40},{60,40}}), graphics={Text(extent={{-52,6},{52,-62}},lineColor={0,0,255},
-    textString="1D thermal wall model under real weather data")}),Icon(coordinateSystem(preserveAspectRatio=false, extent={{-100,-40},{100,40}})));
+    textString="1D thermal wall model under real weather data")}),
+    Icon(coordinateSystem(preserveAspectRatio=false, extent={{-100,-40},{100,40}})),
+Documentation(info="<html>
+<p>
+Example that simulates a 1D-layered thermal wall model under real weather data.
+</p>
+</html>",
+revisions="<html>
+<ul>
+<li>
+May 21, 2016, by Christoph Nytsch-Geusen:<br/>
+First implementation.
+</li>
+</ul>
+</html>"));
 end WallThermal1DNodes;

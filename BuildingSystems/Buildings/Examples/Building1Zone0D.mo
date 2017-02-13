@@ -5,18 +5,18 @@ model Building1Zone0D
   // building1 with ideal load calculation
   BuildingSystems.Buildings.Ambient ambient1(
     nSurfaces=building1.nSurfacesAmbient,
-    weatherDataFile=BuildingSystems.Climate.WeatherDataMeteonorm.WeatherDataFile_Germany_Berlin())
+    redeclare BuildingSystems.Climate.WeatherDataMeteonorm.WeatherDataFile_Germany_Berlin weatherDataFile)
       annotation (Placement(transformation(extent={{-40,20},{-20,40}})));
   BuildingSystems.Buildings.BuildingTemplates.Building1Zone0D building1(
-    AAmbient=1000,
-    AInner=500,
-    AGround=200,
+    AAmb=1000,
+    AInn=500,
+    AGro=200,
     nWindows=1,
-    AWindow={100},
+    AWin={100},
     VAir=2000,
-    CAmbient=100000,
-    CInner=100000,
-    CGround=100000)
+    CAmb=100000,
+    CInn=100000,
+    CGro=100000)
     annotation (Placement(transformation(extent={{-10,20},{10,40}})));
   Modelica.Blocks.Sources.Constant TSetCooling(
     k=273.15 + 24.0)
@@ -33,15 +33,15 @@ model Building1Zone0D
     weatherDataFile=BuildingSystems.Climate.WeatherDataMeteonorm.WeatherDataFile_Germany_Berlin())
     annotation (Placement(transformation(extent={{-40,-28},{-20,-8}})));
   BuildingSystems.Buildings.BuildingTemplates.Building1Zone0D building2(
-    AAmbient=1000,
-    AInner=500,
-    AGround=200,
+    AAmb=1000,
+    AInn=500,
+    AGro=200,
     nWindows=1,
-    AWindow={100},
+    AWin={100},
     VAir=2000,
-    CAmbient=100000,
-    CInner=100000,
-    CGround=100000,
+    CAmb=100000,
+    CInn=100000,
+    CGro=100000,
     calcIdealLoads=false)
     annotation (Placement(transformation(extent={{-10,-28},{10,-8}})));
   Modelica.Blocks.Sources.Constant airchange2(
@@ -99,12 +99,25 @@ equation
       color={85,170,255},
       smooth=Smooth.None));
 
-
   annotation(experiment(StartTime=0, StopTime=31536000,Interval=3600),
     __Dymola_Commands(file="modelica://BuildingSystems/Resources/Scripts/Dymola/Buildings/Examples/Building1Zone0D.mos" "Simulate and plot"),
     Diagram(coordinateSystem(preserveAspectRatio=false, extent={{-60,-60},{60,60}}), graphics={
     Text(extent={{-52,-20},{52,-88}}, lineColor={0,0,255},textString="Low-order thermal building model under real weather data"),
     Text(extent={{-40,42},{0,-12}}, lineColor={0,0,255},textString="Variant 1: ideal load calculation"),
     Text(extent={{-41,6},{17,-74}},lineColor={0,0,255},textString="Variant 2: free floating temperature calculation")}),
-    Icon(coordinateSystem(preserveAspectRatio=false, extent={{-100,-40},{100,40}})));
+    Icon(coordinateSystem(preserveAspectRatio=false, extent={{-100,-40},{100,40}})),
+Documentation(info="<html>
+<p>
+Example that simulates the ideal heating and cooling load (building1) and the free floating temperature (building2).
+based on a low-order building model
+</p>
+</html>",
+revisions="<html>
+<ul>
+<li>
+May 21, 2016, by Christoph Nytsch-Geusen:<br/>
+First implementation.
+</li>
+</ul>
+</html>"));
 end Building1Zone0D;

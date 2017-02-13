@@ -9,9 +9,6 @@ model BigCollectorInstallationWithStorage
     "time Gdot_beam Gdot_diffuse T_air_env"
     annotation (Placement(transformation(extent={{26,64},{8,80}})));
   BuildingSystems.Climate.SolarRadiationTransformers.SolarRadiationTransformerIsotropicSky radiation2(
-    latitudeDeg=weatherData.latitudeDeg,
-    longitudeDeg=weatherData.longitudeDeg,
-    longitudeDeg0=weatherData.longitudeDeg0,
     rhoAmb=0.2)
     annotation (Placement(transformation(extent={{-112,52},{-92,72}})));
   Modelica.Blocks.Math.UnitConversions.From_degC from_degC
@@ -39,15 +36,14 @@ model BigCollectorInstallationWithStorage
     Ti = 5.0,
     yMax = 4.0)
     annotation (Placement(transformation(extent={{72,40},{52,60}})));
-  Modelica.Blocks.Sources.RealExpression T_set(y=273.15 + 80)
+  Modelica.Blocks.Sources.RealExpression T_set(y=273.15 + 80.0)
     annotation (Placement(transformation(extent={{100,40},{80,60}})));
-  BuildingSystems.Fluid.Sensors.Temperature senTem1(redeclare package Medium = Medium)
+  BuildingSystems.Fluid.Sensors.Temperature senTem1(
+    redeclare package Medium = Medium)
     annotation (Placement(transformation(extent={{100,0},{80,20}})));
   BuildingSystems.Technologies.ThermalStorages.FluidStorage storage(
     redeclare package Medium = Medium,
-    redeclare
-      BuildingSystems.Technologies.ThermalStorages.BaseClasses.BuoyancyModels.Buoyancy1
-                                                                                                HeatBuoyancy,
+    redeclare BuildingSystems.Technologies.ThermalStorages.BaseClasses.BuoyancyModels.Buoyancy1 HeatBuoyancy,
     HX_2 = false,
     PerfectlyIsolated = true,
     HX_1 = false,
@@ -115,7 +111,7 @@ model BigCollectorInstallationWithStorage
     annotation (Placement(transformation(extent={{2,-162},{-20,-140}})));
   Modelica.Blocks.Sources.RealExpression systemOff(y=0)
     annotation (Placement(transformation(extent={{60,-178},{20,-160}})));
-  ThermalCollectorInSerie collectorInSerie(
+  BuildingSystems.Technologies.SolarThermal.ThermalCollectorInSeries collectorInSeries(
     redeclare package Medium = Medium,
     nCol=3,
     redeclare BuildingSystems.Technologies.SolarThermal.Data.Collectors.FlatSolarCollector1 collectorData(A=3.17),
@@ -128,12 +124,9 @@ model BigCollectorInstallationWithStorage
   Modelica.Thermal.HeatTransfer.Sources.PrescribedTemperature prescribedTemperature1
     annotation (Placement(transformation(extent={{2,-42},{-8,-32}})));
   BuildingSystems.Climate.SolarRadiationTransformers.SolarRadiationTransformerIsotropicSky radiation1(
-    latitudeDeg=weatherData.latitudeDeg,
-    longitudeDeg=weatherData.longitudeDeg,
-    longitudeDeg0=weatherData.longitudeDeg0,
     rhoAmb=0.2)
     annotation (Placement(transformation(extent={{-120,10},{-100,30}})));
-  ThermalCollectorInParallel collectorInParallel(
+  BuildingSystems.Technologies.SolarThermal.ThermalCollectorInParallel collectorInParallel(
     redeclare package Medium = Medium,
     m_flow_nominal=1,
     nCol=3,
@@ -237,11 +230,11 @@ equation
       points={{-50.2,-172},{-50,-172},{-50,-150},{-21.1,-150},{-21.1,-151}},
       color={0,0,127},
       smooth=Smooth.None));
-  connect(HX.port_b1, collectorInSerie.port_a) annotation (Line(
+  connect(HX.port_b1, collectorInSeries.port_a) annotation (Line(
       points={{-94,-202},{-130,-202},{-130,-50},{-60,-50}},
       color={0,127,255},
       smooth=Smooth.None));
-  connect(collectorInSerie.port_b, pump1.port_a) annotation (Line(
+  connect(collectorInSeries.port_b, pump1.port_a) annotation (Line(
       points={{-40,-50},{24,-50},{24,-14}},
       color={0,127,255},
       smooth=Smooth.None));
@@ -249,7 +242,7 @@ equation
       points={{3,-37},{18,-37},{18,22},{-39,22},{-39,49}},
       color={0,0,127},
       smooth=Smooth.None));
-  connect(radiation1.radiationPort, collectorInSerie.radiationPort)
+  connect(radiation1.radiationPort, collectorInSeries.radiationPort)
     annotation (Line(
       points={{-102,19.8},{-102,-42},{-53,-42}},
       color={0,0,0},
@@ -328,7 +321,7 @@ equation
       points={{-25,-5},{-25,32},{-50,32},{-50,49}},
       color={191,0,0},
       smooth=Smooth.None));
-  connect(collectorInSerie.heatPortCon, prescribedTemperature1.port)
+  connect(collectorInSeries.heatPortCon, prescribedTemperature1.port)
     annotation (Line(
       points={{-47,-42},{-46,-42},{-46,-37},{-8,-37}},
       color={191,0,0},
@@ -365,19 +358,33 @@ equation
       color={0,0,127},
       smooth=Smooth.None));
 
-  annotation(Diagram(coordinateSystem(preserveAspectRatio=false, extent={{-140,-240},{160,80}}), graphics),
+  connect(radiation2.latitudeDeg, weatherData.latitudeDeg) annotation (Line(
+        points={{-105.8,69.6},{-105.8,79.2},{7.1,79.2}}, color={0,0,127}));
+  connect(weatherData.longitudeDeg, radiation2.longitudeDeg) annotation (Line(
+        points={{7.1,77.6},{-102,77.6},{-102,69.6}}, color={0,0,127}));
+  connect(radiation2.longitudeDeg0, weatherData.longitudeDeg0) annotation (Line(
+        points={{-98,69.6},{-98,74},{7.1,74},{7.1,76}}, color={0,0,127}));
+  connect(radiation1.latitudeDeg, weatherData.latitudeDeg) annotation (Line(
+        points={{-113.8,27.6},{-113.8,79.2},{7.1,79.2}}, color={0,0,127}));
+  connect(radiation1.longitudeDeg, weatherData.longitudeDeg) annotation (Line(
+        points={{-110,27.6},{-110,27.6},{-110,86},{-8,86},{-8,77.6},{7.1,77.6}},
+        color={0,0,127}));
+  connect(weatherData.longitudeDeg0, radiation1.longitudeDeg0) annotation (Line(
+        points={{7.1,76},{-24,76},{-24,78},{-86,78},{-86,36},{-86,32},{-106,32},
+          {-106,27.6}}, color={0,0,127}));
+  annotation(Diagram(coordinateSystem(preserveAspectRatio=false, extent={{-140,-240},{160,80}})),
     experiment(StartTime=10368000, StopTime=10713600),
     __Dymola_Commands(file="modelica://BuildingSystems/Resources/Scripts/Dymola/Technologies/SolarThermal/Examples/BigCollectorInstallationWithStorage.mos" "Simulate and plot"),
-    Documentation(info="<html>
-    <p> This example tests the implementation of
-    <a href=\"modelica://BuildingSystems.Technologies.SolarThermal.ThermalCollector\">
-    BuildingSystems.Technologies.SolarThermal.ThermalCollector</a>.
-    </p>
-    </html>", revisions="<html>
-    <ul>
-    <li>
-    April 10, 2015, by Carles Ribas Tugores:<br/>
-    </li>
-    </ul>
-    </html>"));
+Documentation(info="<html>
+<p> This example tests the implementation of
+<a href=\"modelica://BuildingSystems.Technologies.SolarThermal.ThermalCollector\">
+BuildingSystems.Technologies.SolarThermal.ThermalCollector</a>.
+</p>
+</html>", revisions="<html>
+<ul>
+<li>
+April 10, 2015, by Carles Ribas Tugores:<br/>
+</li>
+</ul>
+</html>"));
 end BigCollectorInstallationWithStorage;
