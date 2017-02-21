@@ -1,6 +1,6 @@
 within BuildingSystems.Buildings.BaseClasses;
 partial model AirElementGeneral
-  "Finite volume element"
+  "An air element for three-dimensional air flow simulation"
   ///////////////////////////////////////////////////////
   /////////////     CONSTANTS     ///////////////////////
   constant Modelica.SIunits.SpecificHeatCapacity cAir = 1005.00
@@ -50,23 +50,23 @@ partial model AirElementGeneral
     "FV absolute central position Z"
     annotation (HideResult=false);
   // Relative Position in space (near-wall or inside)
-  parameter Boolean BCwall_north = false
-    "Inner or boundary volume"
-    annotation (HideResult=true);
-  parameter Boolean BCwall_east = false
-    "Inner or boundary volume"
-    annotation (HideResult=true);
   parameter Boolean BCwall_south = false
-    "Inner or boundary volume"
+    "Inner or boundary volume (direction X1)"
     annotation (HideResult=true);
-  parameter Boolean BCwall_west = false
-    "Inner or boundary volume"
+  parameter Boolean BCwall_north = false
+    "Inner or boundary volume (direction X2)"
     annotation (HideResult=true);
   parameter Boolean BCwall_floor = false
-    "Inner or boundary volume"
+    "Inner or boundary volume (direction Z1)"
     annotation (HideResult=true);
   parameter Boolean BCwall_roof = false
-    "Inner or boundary volume"
+    "Inner or boundary volume (direction Z2)"
+    annotation (HideResult=true);
+  parameter Boolean BCwall_east = false
+    "Inner or boundary volume (direction Z1)"
+    annotation (HideResult=true);
+  parameter Boolean BCwall_west = false
+    "Inner or boundary volume (direction Z2)"
     annotation (HideResult=true);
   parameter Boolean enabled = true
     "Flag for visualisation3D"
@@ -142,30 +142,30 @@ partial model AirElementGeneral
   ///////////////////////////////////////////////////////
   ////////////////     PORTS   //////////////////////////
   // 3D-Fluid-Ports
-  BuildingSystems.Buildings.Airvolumes.Interfaces.FluidFluid flowPort_Y2
-    "Connection to flow-/wall-element, direction y2"
-    annotation (Placement(transformation(extent={{-10,70},{10,90}}),
-      iconTransformation(extent={{-10,70},{10,90}})));
-  BuildingSystems.Buildings.Airvolumes.Interfaces.FluidFluid flowPort_Z2
-    "Connection to flow-/wall-element, direction z2"
-    annotation (Placement(transformation(extent={{70,70},{90,90}}),
-      iconTransformation(extent={{70,70},{90,90}})));
-  BuildingSystems.Buildings.Airvolumes.Interfaces.FluidFluid flowPort_Y1
-    "Connection to flow-/wall-element, direction y1"
-    annotation (Placement(transformation(extent={{-10,-90},{10,-70}}),
-      iconTransformation(extent={{-10,-90},{10,-70}})));
-  BuildingSystems.Buildings.Airvolumes.Interfaces.FluidFluid flowPort_Z1
-    "Connection to flow-/wall-element, direction z1"
-    annotation (Placement(transformation(extent={{-90,-90},{-70,-70}}),
-      iconTransformation(extent={{-90,-90},{-70,-70}})));
   BuildingSystems.Buildings.Airvolumes.Interfaces.FluidFluid flowPort_X1
-    "Connection to flow-/wall-element, direction x1"
+    "Connection to flow-/wall-element, direction X1"
     annotation (Placement(transformation(extent={{-90,-12},{-70,8}}),
         iconTransformation(extent={{-90,-12},{-70,8}})));
   BuildingSystems.Buildings.Airvolumes.Interfaces.FluidFluid flowPort_X2
-    "Connection to flow-/wall-element, direction x2"
+    "Connection to flow-/wall-element, direction X2"
     annotation (Placement(transformation(extent={{70,-10},{90,10}}),
       iconTransformation(extent={{70,-10},{90,10}})));
+  BuildingSystems.Buildings.Airvolumes.Interfaces.FluidFluid flowPort_Y1
+    "Connection to flow-/wall-element, direction Y1"
+    annotation (Placement(transformation(extent={{-10,-90},{10,-70}}),
+      iconTransformation(extent={{-10,-90},{10,-70}})));
+  BuildingSystems.Buildings.Airvolumes.Interfaces.FluidFluid flowPort_Y2
+    "Connection to flow-/wall-element, direction Y2"
+    annotation (Placement(transformation(extent={{-10,70},{10,90}}),
+      iconTransformation(extent={{-10,70},{10,90}})));
+  BuildingSystems.Buildings.Airvolumes.Interfaces.FluidFluid flowPort_Z1
+    "Connection to flow-/wall-element, direction Z1"
+    annotation (Placement(transformation(extent={{-90,-90},{-70,-70}}),
+      iconTransformation(extent={{-90,-90},{-70,-70}})));
+  BuildingSystems.Buildings.Airvolumes.Interfaces.FluidFluid flowPort_Z2
+    "Connection to flow-/wall-element, direction Z2"
+    annotation (Placement(transformation(extent={{70,70},{90,90}}),
+      iconTransformation(extent={{70,70},{90,90}})));
   //"heat conduction (FV <-> FV)"
   BuildingSystems.Buildings.Airvolumes.Interfaces.FluidHeatExt heatPort_intern
     annotation (Placement(transformation(extent={{-10,-40},{10,-20}}),
@@ -430,39 +430,36 @@ initial equation
   fluid.T = T_start;
   fluid.p = rho_start*Modelica.Constants.R/n*fluid.T;
 
-  annotation (defaultComponentName = "FVelement",
+  annotation (defaultComponentName = "airEle",
     Icon(coordinateSystem(preserveAspectRatio=false,extent={{-100,-100},{100,100}}),graphics={
-          Rectangle(
-          extent={{-80,80},{80,-80}},
-          lineColor={0,0,255},
-          fillColor={170,213,255},
-          fillPattern=FillPattern.Solid,
-          lineThickness=0.5),             Text(
-          extent={{12,-78},{98,-102}},
-          lineColor={0,0,255},
-          fillColor={170,213,255},
-          fillPattern=FillPattern.Solid,
-          textString="%name"),
-        Line(points={{-80,80},{-62,98}}, pattern=LinePattern.None),
-        Polygon(
-          points={{-80,80},{-60,100},{100,100},{80,80},{-80,80}},
-          lineColor={0,0,255},
-          fillColor={170,213,255},
-          fillPattern=FillPattern.Solid,
-          lineThickness=0.5),
-        Polygon(
-          points={{80,-80},{100,-60},{100,100},{80,80},{80,-80}},
-          lineColor={0,0,255},
-          fillColor={170,213,255},
-          fillPattern=FillPattern.Solid,
-          lineThickness=0.5),
-        Text(
-          extent={{-34,74},{42,8}},
-          lineColor={0,0,255},
-          lineThickness=0.5,
-          fillColor={170,213,255},
-          fillPattern=FillPattern.Solid,
-          textString="3D")}),                                             HideResult=true,
+    Rectangle(extent={{-80,80},{80,-80}},lineColor={0,0,255},fillColor={170,213,255},
+      fillPattern=FillPattern.Solid,lineThickness=0.5),
+    Text(extent={{12,-78},{98,-102}},lineColor={0,0,255},fillColor={170,213,255},
+      fillPattern=FillPattern.Solid,textString="%name"),
+    Line(points={{-80,80},{-62,98}}, pattern=LinePattern.None),
+    Polygon(points={{-80,80},{-60,100},{100,100},{80,80},{-80,80}},lineColor={0,0,255},
+      fillColor={170,213,255},fillPattern=FillPattern.Solid,lineThickness=0.5),
+    Polygon(points={{80,-80},{100,-60},{100,100},{80,80},{80,-80}},lineColor={0,0,255},
+      fillColor={170,213,255},fillPattern=FillPattern.Solid,lineThickness=0.5),
+    Text(extent={{-34,74},{42,8}},lineColor={0,0,255},lineThickness=0.5,
+      fillColor={170,213,255},fillPattern=FillPattern.Solid,textString="3D")}),
+      HideResult=true,
     Diagram(coordinateSystem(preserveAspectRatio=false, extent={{-100,-100},{100,100}})),
-    Documentation(info=""));
+    Documentation(info="<html>
+    <p>
+    This partial model the defines the base functionalities of an air element
+    for tree-dimensional air flow simulation in rooms.
+    </p>
+    </html>", revisions="<html>
+    <ul>
+    <li>
+    February 21, 2017, by Christoph Nytsch-Geusen:<br/>
+    Re-integration into the BuildingSystems library.
+    </li>
+    <li>
+    October 31, 2016, by Katharina Mucha:<br/>
+    First implementation.
+    </li>
+    </ul>
+    </html>"));
 end AirElementGeneral;
