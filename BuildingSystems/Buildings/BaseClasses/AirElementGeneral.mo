@@ -57,10 +57,10 @@ partial model AirElementGeneral
     "Inner or boundary volume (direction X2)"
     annotation (HideResult=true);
   parameter Boolean BCwall_floor = false
-    "Inner or boundary volume (direction Z1)"
+    "Inner or boundary volume (direction Y1)"
     annotation (HideResult=true);
   parameter Boolean BCwall_roof = false
-    "Inner or boundary volume (direction Z2)"
+    "Inner or boundary volume (direction Y2)"
     annotation (HideResult=true);
   parameter Boolean BCwall_east = false
     "Inner or boundary volume (direction Z1)"
