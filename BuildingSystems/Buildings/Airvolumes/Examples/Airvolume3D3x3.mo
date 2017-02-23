@@ -1,7 +1,7 @@
 within BuildingSystems.Buildings.Airvolumes.Examples;
 model Airvolume3D3x3
   extends BuildingSystems.Buildings.Airvolumes.Airvolume3DTemplate(
-    nSurfaces = 4 * 3 + 2 * 9,
+    nSurfaces = 4*3 + 2*9,
     nAirElements = 9,
     surfaceAdapter.posX = {
       // Left border
