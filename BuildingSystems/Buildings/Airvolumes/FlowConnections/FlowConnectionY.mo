@@ -17,15 +17,23 @@ model FlowConnectionY
     annotation (HideResult=true);
   final parameter Real LayFacBC = (if BCwall_east or BCwall_west then LayFac else 1)*(if BCwall_north or BCwall_south then LayFac else 1);
   Modelica.SIunits.Length dist=sqrt((port_2.pos[2] - port_1.pos[2])^2);
+  Real Fm_tmp(start = 0);
+
 equation
   // Velocity ​​values: Pressure forces + Impulse forces + Viscose forces
-  // Type momentum equation, without parameterization
+  // Type momentum equation (with parameterization)
   // Problem Fg: (if time < 1 then time else 1)* Modelica.Constants.g_n*dyGravity
   // Problem Fg: homotopy(actual=  Modelica.Constants.g_n*dyGravity, simplified=  0)
   // Problem Fg: Modelica.Constants.g_n*deltay * tanh(time)
-  // deltay * der(v) = (-1/(0.5*(port_1.rho + port_2.rho)))*dP - (if gravity then (Modelica.Constants.g_n*deltayy * tanh(rampe.y)) else 0) - (port_2.vVec[2]^2 - port_1.vVec[2]^2) - 0.5*(port_1.ForceVF + port_2.ForceVF);
-  // with parameterization
-  deltay * der(v) = (-1/(0.5*(port_1.rho + port_2.rho)))*dP - (if gravity then (Modelica.Constants.g_n*deltayy * tanh(rampe.y)) else 0) - (port_2.vVec[2]^2 - port_1.vVec[2]^2) - 0.5*(port_1.ForceVF + port_2.ForceVF) *0.5 - 0.5 * LosFac*sign(v)*v^2*LayFacBC;
+  //
+  Fp = - 1/(0.5*(port_1.rho + port_2.rho))*dP;
+  Fm_tmp = - (port_2.vVec[2]^2 - port_1.vVec[2]^2);
+  Fm = - (if (sign(Fp) == sign(Fm_tmp)) then - sign(Fp) else sign(Fp))*abs(Fm_tmp);
+  Fv = - 0.5*(port_1.ForceVF + port_2.ForceVF);
+  Fb = - sign(v)*v^2;
+  Fg = - (if gravity then (Modelica.Constants.g_n*deltayy * tanh(rampe.y)) else 0);
+
+  deltay * der(v) =  Fp + Fm + Fg + 0.5*(ParVis * Fv + LosFac *LayFacBC* Fb);
 
   port_1.m_flow = (0.5*(port_1.rho + port_2.rho))*(dx*dz)*v;
   port_1.m_flow + port_2.m_flow = 0;

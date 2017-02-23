@@ -12,7 +12,8 @@ equation
   port_1.Q_flow+ port_2.Q_flow= 0;
 
   annotation(Icon(graphics={
-    Ellipse(extent={{-48,50},{48,-44}},lineThickness=1,fillColor={213,255,170},fillPattern=FillPattern.Solid,pattern=LinePattern.None),
+    Ellipse(extent={{-48,50},{48,-44}},lineThickness=1,fillColor={213,255,170},
+            fillPattern =                                                                  FillPattern.Solid,pattern=LinePattern.None),
     Line(points={{-30,0},{0,0},{30,0}},thickness=1,arrow={Arrow.Filled,Arrow.Filled},color={0,140,72})}),
     Documentation(info=""));
 end ZoneHeatConductionX;

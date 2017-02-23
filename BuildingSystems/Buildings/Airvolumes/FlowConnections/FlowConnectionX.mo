@@ -11,12 +11,20 @@ model FlowConnectionX
     annotation (HideResult=true);
   final parameter Real LayFacBC = (if BCwall_floor or BCwall_roof then LayFac else 1)*(if BCwall_north or BCwall_south then LayFac else 1);
   Modelica.SIunits.Length dist=sqrt((port_2.pos[1] - port_1.pos[1])^2);
+  Real Fm_tmp(start = 0);
+
 equation
   // Velocity ​​values: Pressure forces + Impulse forces + Viscose forces
-  // Type momentum equation, without parameterization
-  // deltax * der(v) = (-1/(0.5*(port_1.rho + port_2.rho)))*dP  - (port_2.vVec[1]^2 - port_1.vVec[1]^2) - 0.5*(port_1.ForceVF + port_2.ForceVF);
-  // with parameterization:
-  deltax * der(v) = (-1/(0.5*(port_1.rho + port_2.rho)))*dP  - (port_2.vVec[1]^2 - port_1.vVec[1]^2) - 0.5*(port_1.ForceVF + port_2.ForceVF) *0.5 - 0.5 * LosFac*sign(v)*v^2 * LayFacBC;
+  // Type momentum equation (with parameterization)
+  //
+  Fp = - 1/(0.5*(port_1.rho + port_2.rho))*dP;
+  Fm_tmp = - (port_2.vVec[1]^2 - port_1.vVec[1]^2);
+  Fm = - (if (sign(Fp) == sign(Fm_tmp)) then - sign(Fp) else sign(Fp))*abs(Fm_tmp);
+  Fv = - 0.5*(port_1.ForceVF + port_2.ForceVF);
+  Fb = - sign(v)*v^2;
+  Fg = 0;
+
+  deltax * der(v) =  Fp + Fm + 0.5*(ParVis * Fv + LosFac *LayFacBC* Fb);
 
   port_1.m_flow = (0.5*(port_1.rho + port_2.rho))*(dy*dz)*v;
   port_1.m_flow + port_2.m_flow = 0;

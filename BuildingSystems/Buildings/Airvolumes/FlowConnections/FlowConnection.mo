@@ -14,11 +14,21 @@ partial model FlowConnection
     annotation (HideResult=true);
   parameter Boolean BCwall_roof = false
     annotation (HideResult=true);
-  final parameter Real LayFac = BuildingSystems.Buildings.Airvolumes.Parameter.f_lay;
-  final parameter Real LosFac = BuildingSystems.Buildings.Airvolumes.Parameter.f_loss;
+    /////////////     PARAMETER     ///////////////////////
+  final parameter Real ParVis =  BuildingSystems.Buildings.Airvolumes.Parameter.f_pv annotation (HideResult=true);
+  final parameter Real LayFac = BuildingSystems.Buildings.Airvolumes.Parameter.f_lay annotation (HideResult=true);
+  final parameter Real LosFac = BuildingSystems.Buildings.Airvolumes.Parameter.f_loss annotation (HideResult=true);
+
   // Ports
   Modelica.SIunits.Velocity v(start = 0, fixed = true);
   Modelica.SIunits.Pressure dP(start=0);
+
+  Real Fp(start = 0);
+  Real Fm(start = 0);
+  Real Fv(start = 0);
+  Real Fb(start = 0);
+  Real Fg(start = 0);
+
   BuildingSystems.Buildings.Airvolumes.Interfaces.FluidFluid port_1
     annotation (Placement(transformation(extent={{-58,-10},{-38,10}}), iconTransformation(extent={{-58,-10},{-38,10}})));
   BuildingSystems.Buildings.Airvolumes.Interfaces.FluidFluid port_2 annotation (Placement(transformation(
