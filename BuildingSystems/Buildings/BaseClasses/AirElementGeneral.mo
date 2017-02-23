@@ -33,9 +33,6 @@ partial model AirElementGeneral
     annotation (HideResult=true);
   ///////////////////////////////////////////////////////
   /////////////     PARAMETER     ///////////////////////
-  final parameter Real parVis =  BuildingSystems.Buildings.Airvolumes.Parameter.f_pv
-    "(parVis * nu) to parameterize the dynamic viskosity"
-    annotation (HideResult=true);
   parameter Real[3] scalF
     "Dimension of this Finite Volume in [m]"
     annotation (HideResult=true);
@@ -419,12 +416,12 @@ equation
   heatPort_extern.T = fluid.T;
  // Parts of the Viscous-Forces
 algorithm
-  flowPort_X1.ForceVF :=  parVis*nu*((flowPort_Y2.visgr1 - flowPort_Y1.visgr1)*dx*dz + (flowPort_Z2.visgr1 - flowPort_Z1.visgr1)*dx*dy);
-  flowPort_X2.ForceVF :=  parVis*nu*((flowPort_Y2.visgr1 - flowPort_Y1.visgr1)*dx*dz + (flowPort_Z2.visgr1 - flowPort_Z1.visgr1)*dx*dy);
-  flowPort_Y1.ForceVF :=  parVis*nu*((flowPort_X2.visgr1 - flowPort_X1.visgr1)*dy*dz + (flowPort_Z2.visgr2 - flowPort_Z1.visgr2)*dx*dy);
-  flowPort_Y2.ForceVF :=  parVis*nu*((flowPort_X2.visgr1 - flowPort_X1.visgr1)*dy*dz + (flowPort_Z2.visgr2 - flowPort_Z1.visgr2)*dx*dy);
-  flowPort_Z1.ForceVF :=  parVis*nu*((flowPort_X2.visgr2 - flowPort_X1.visgr2)*dy*dz + (flowPort_Y2.visgr2 - flowPort_Y1.visgr2)*dx*dz);
-  flowPort_Z2.ForceVF :=  parVis*nu*((flowPort_X2.visgr2 - flowPort_X1.visgr2)*dy*dz + (flowPort_Y2.visgr2 - flowPort_Y1.visgr2)*dx*dz);
+  flowPort_X1.ForceVF :=  nu*((flowPort_Y2.visgr1 - flowPort_Y1.visgr1)*dx*dz + (flowPort_Z2.visgr1 - flowPort_Z1.visgr1)*dx*dy);
+  flowPort_X2.ForceVF :=  nu*((flowPort_Y2.visgr1 - flowPort_Y1.visgr1)*dx*dz + (flowPort_Z2.visgr1 - flowPort_Z1.visgr1)*dx*dy);
+  flowPort_Y1.ForceVF :=  nu*((flowPort_X2.visgr1 - flowPort_X1.visgr1)*dy*dz + (flowPort_Z2.visgr2 - flowPort_Z1.visgr2)*dx*dy);
+  flowPort_Y2.ForceVF :=  nu*((flowPort_X2.visgr1 - flowPort_X1.visgr1)*dy*dz + (flowPort_Z2.visgr2 - flowPort_Z1.visgr2)*dx*dy);
+  flowPort_Z1.ForceVF :=  nu*((flowPort_X2.visgr2 - flowPort_X1.visgr2)*dy*dz + (flowPort_Y2.visgr2 - flowPort_Y1.visgr2)*dx*dz);
+  flowPort_Z2.ForceVF :=  nu*((flowPort_X2.visgr2 - flowPort_X1.visgr2)*dy*dz + (flowPort_Y2.visgr2 - flowPort_Y1.visgr2)*dx*dz);
 //*****************************************************************//
 initial equation
   fluid.T = T_start;

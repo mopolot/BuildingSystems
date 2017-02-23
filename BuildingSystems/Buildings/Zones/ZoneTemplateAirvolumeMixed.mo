@@ -48,8 +48,8 @@ model ZoneTemplateAirvolumeMixed
     V=V,
     height=height,
     heightAirpath = heightAirpath,
-    T_start=T_start,
-    x_start=x_start,
+    T_start={T_start},
+    x_start={x_start},
     nHeatSources=nHeatSourcesTotal,
     nMoistureSources=nMoistureSources,
     nAirpathes=nAirpathes)
@@ -84,7 +84,7 @@ model ZoneTemplateAirvolumeMixed
     annotation (Placement(transformation(extent={{10,-10},{-10,10}},rotation=180,origin={34,36}),   iconTransformation(extent={{-10,-10},{10,10}},rotation=270,origin={-70,70})));
   output BuildingSystems.Interfaces.Moisture_absOutput xAir
     annotation (Placement(transformation(extent={{10,-10},{-10,10}},rotation=180,origin={34,46}),    iconTransformation(extent={{-10,-10},{10,10}},rotation=270,origin={-10,70})));
-  output BuildingSystems.Interfaces.Temp_KOutput TOperative = (airvolume.T + radiationDistribution.TSurfMean) / 2.0
+  output BuildingSystems.Interfaces.Temp_KOutput TOperative = (airvolume.T[1] + radiationDistribution.TSurfMean) / 2.0
     annotation (Placement(transformation(extent={{-10,-10},{10,10}},rotation=180,origin={-100,92}), iconTransformation(extent={{-10,-10},{10,10}},rotation=270,origin={-30,70})));
   BuildingSystems.Interfaces.HeatPorts conHeatSourcesPorts[nHeatSources] if heatSources
     "Heat ports of the convective heat sources"
@@ -189,11 +189,11 @@ equation
         points={{-19.2,30.4},{-30,30.4},{-30,30}},
         color={127,0,0},
         smooth=Smooth.None));
-    connect(airvolume.T, coolingLoad.u_m) annotation (Line(
+    connect(airvolume.T[1], coolingLoad.u_m) annotation (Line(
         points={{19.2,35.2},{26,35.2},{26,6},{-72,6},{-72,38},{-62,38},{-62,35.2}},
         color={0,0,127},
         smooth=Smooth.None));
-    connect(airvolume.T, heatingLoad.u_m) annotation (Line(
+    connect(airvolume.T[1], heatingLoad.u_m) annotation (Line(
         points={{19.2,35.2},{26,35.2},{26,66},{-62,66},{-62,63.2}},
         color={0,0,127},
         smooth=Smooth.None));
@@ -272,9 +272,9 @@ equation
         color={0,127,255},
         smooth=Smooth.None));
   end if;
-  connect(airvolume.T, TAir)
+  connect(airvolume.T[1], TAir)
     annotation (Line(points={{19.2,35.2},{22.6,35.2},{22.6,36},{34,36}}, color={0,0,127}));
-  connect(airvolume.x, xAir)
+  connect(airvolume.x[1], xAir)
     annotation (Line(points={{19.2,44.8},{24.6,44.8},{24.6,46},{34,46}}, color={0,0,127}));
 
   annotation(defaultComponentName="zone");

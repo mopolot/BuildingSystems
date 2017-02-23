@@ -1,4 +1,5 @@
 within BuildingSystems.Buildings.Airvolumes;
 package Examples
-  "Example geometries manually created"
+  "Examples of 3D air volume configurations"
+  extends Modelica.Icons.ExamplesPackage;
 end Examples;

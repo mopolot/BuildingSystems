@@ -48,12 +48,12 @@ equation
   // Druck: p*V = (0.622 + x) * m * R_v * T;
   fluid.p * dx*dy*dz = (0.622 + fluid.Xi) * mAir * R_v * fluid.T;
   //////////////////////////////////////////////////////////
-  // Humidity <- out of buildingSystems
+  // Humidity calculation <- out of buildingSystems
   //////////////////////////////////////////////////////////
   // Mass of ...
   mAir = fluid.rho*dx*dy*dz;
   fluid.Xi = mH2OAir/mAir;
-  //fluid.Xi = AirVolume3Dv02.Functions.MoistAir.x(fluid.p,AirVolume3Dv02.Functions.MoistAir.p_sat(fluid.T),phi*100);
+  //fluid.Xi = AirVolumes3Dv23alpha.Functions.MoistAir.x(fluid.p,AirVolume3Dv02.Functions.MoistAir.p_sat(fluid.T),phi*100);
 
   //Mass balance of water vapor in the air
   der(mH2OAir) =
@@ -74,5 +74,5 @@ equation
     // evaporated water which leaves the liquid reservoir
 
   // relative air humidity
-  phi =  BuildingSystems.Buildings.Airvolumes.Functions.MoistAir.p(fluid.Xi,fluid.p) / BuildingSystems.Buildings.Airvolumes.Functions.MoistAir.p_sat(fluid.T);
+  phi = BuildingSystems.Buildings.Airvolumes.Functions.MoistAir.p(fluid.Xi,fluid.p) / BuildingSystems.Buildings.Airvolumes.Functions.MoistAir.p_sat(fluid.T);
 end AirElementHygroThermal;
