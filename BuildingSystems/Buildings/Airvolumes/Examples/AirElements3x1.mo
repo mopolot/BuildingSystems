@@ -97,7 +97,7 @@ model AirElements3x1
     posZ=1,
     location="west")
     annotation (Placement(transformation(extent={{20,-40},{0,-20}})));
-  FlowConnections.FlowConnectionX flowConnectionX1(
+  BuildingSystems.Buildings.Airvolumes.FlowConnections.FlowConnectionX flowConnectionX1(
     BCwall_east=true,
     BCwall_west=true,
     BCwall_roof=true,
@@ -105,9 +105,9 @@ model AirElements3x1
     BCwall_south=false,
     BCwall_floor=true)
     annotation (Placement(transformation(extent={{10,-60},{30,-40}})));
-  FlowConnections.ZoneHeatConductionX zoneHeatConductionX1
+  BuildingSystems.Buildings.Airvolumes.FlowConnections.ZoneHeatConductionX zoneHeatConductionX1
     annotation (Placement(transformation(extent={{10,-70},{30,-50}})));
-  AirElements.AirElementThermal airEle311(
+  BuildingSystems.Buildings.Airvolumes.AirElements.AirElementThermal airEle311(
     scalF={1,1,1},
     posX=2.5,
     posY=0.5,

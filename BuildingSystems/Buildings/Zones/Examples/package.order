@@ -1,4 +1,6 @@
 SingleZoneHygroThermal1D
 SingleZoneThermal1D
-SingleZoneThermal3D
+SingleZoneThermal3D1x1
+SingleZoneThermal3D3x3
+ZoneAirvolume3D1x1
 ZoneAirvolume3D3x3

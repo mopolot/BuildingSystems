@@ -1,5 +1,5 @@
 within BuildingSystems.Buildings.Zones.Examples;
-model SingleZoneThermal3D
+model SingleZoneThermal3D3x3
   "Thermal zone model and some 1D-constructions elements under real weather data"
   extends Modelica.Icons.Example;
   parameter Integer nSurfaces = 3*3 + 2*9;
@@ -264,8 +264,9 @@ equation
           -44,-4},{-38,-4},{-38,-38},{-4,-38},{-4,-34.6}}, color={85,170,255}));
   connect(ambient.toAirPorts[12], surface4.toAirPort) annotation (Line(points={{
           -44,-4},{-38,-4},{-38,-38},{-22,-38},{-22,-34.6}}, color={85,170,255}));
-    annotation(experiment(StartTime=0, StopTime=31536000),
-      __Dymola_Commands(file="modelica://BuildingSystems/Resources/Scripts/Dymola/Buildings/Zones/Examples/SingleZoneThermal1D.mos" "Simulate and plot"),
-      Diagram(coordinateSystem(preserveAspectRatio=false, extent={{-60,-60},{60,60}})),
-      Icon(coordinateSystem(preserveAspectRatio=false, extent={{-100,-40},{100,40}})));
-end SingleZoneThermal3D;
+
+  annotation(experiment(StartTime=0, StopTime=31536000),
+    __Dymola_Commands(file="modelica://BuildingSystems/Resources/Scripts/Dymola/Buildings/Zones/Examples/SingleZoneThermal3D3x3.mos" "Simulate and plot"),
+    Diagram(coordinateSystem(preserveAspectRatio=false, extent={{-60,-60},{60,60}})),
+    Icon(coordinateSystem(preserveAspectRatio=false, extent={{-100,-40},{100,40}})));
+end SingleZoneThermal3D3x3;
