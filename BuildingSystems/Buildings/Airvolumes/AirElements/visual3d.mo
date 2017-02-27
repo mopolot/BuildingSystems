@@ -7,18 +7,18 @@ model visual3d
     annotation (HideResult=true);
   parameter Real b = 0.5
     annotation (HideResult=true);
-  parameter SIunits.Time updateInterval = 5
+  parameter Modelica.SIunits.Time updateInterval = 5
     annotation (HideResult=true);
   //min and max values for the scale
-  parameter SIunits.Temp_K minTempVis3D= 293.15-5;//298.15
-  parameter SIunits.Temp_K maxTempVis3D= 293.15+5;//303.15
-  parameter SIunits.Velocity minVel= 0.0
+  parameter Modelica.SIunits.Temp_K minTempVis3D= 293.15-5;//298.15
+  parameter Modelica.SIunits.Temp_K maxTempVis3D= 293.15+5;//303.15
+  parameter Modelica.SIunits.Velocity minVel= 0.0
     annotation (HideResult=true);
-  parameter SIunits.Velocity maxVel = 0.11
+  parameter Modelica.SIunits.Velocity maxVel = 0.11
     annotation (HideResult=true);
-  parameter SIunits.Velocity minVelMag= 0.0
+  parameter Modelica.SIunits.Velocity minVelMag= 0.0
     annotation (HideResult=true);
-  parameter SIunits.Velocity maxVelMag= 3.3
+  parameter Modelica.SIunits.Velocity maxVelMag= 3.3
     annotation (HideResult=true);
   parameter Real minVal= 0.0
     annotation (HideResult=true);
