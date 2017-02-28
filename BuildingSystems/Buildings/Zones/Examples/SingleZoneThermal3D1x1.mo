@@ -45,7 +45,7 @@ model SingleZoneThermal3D1x1
         rotation=270,
         origin={0,-28})));
   BuildingSystems.Buildings.Ambient ambient(
-    redeclare Climate.WeatherDataMeteonorm.WeatherDataFile_Germany_Berlin weatherDataFile,
+    redeclare BuildingSystems.Climate.WeatherDataMeteonorm.WeatherDataFile_Germany_Berlin weatherDataFile,
     nSurfaces=nSurfaces)
     annotation (Placement(transformation(extent={{-62,-10},{-42,10}})));
   BuildingSystems.Buildings.Zones.Examples.ZoneAirvolume3D1x1 zone(
