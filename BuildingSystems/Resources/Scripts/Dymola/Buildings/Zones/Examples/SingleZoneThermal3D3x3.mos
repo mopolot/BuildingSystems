@@ -1,0 +1,16 @@
+simulateModel("BuildingSystems.Buildings.Zones.Examples.SingleZoneThermal3D3x3", stopTime=864000, method="dassl", tolerance = 1e-5, resultFile="SingleZoneThermal3D3x3");
+removePlots();
+createPlot(
+  id = 1,
+  position = {0, 0, 600, 500},
+  y = {"ambient.TAirRef","zone.TAir[1]","zone.TAir[2]","zone.TAir[3]","zone.TAir[4]","zone.TAir[5]","zone.TAir[6]","zone.TAir[7]","zone.TAir[8]","zone.TAir[9]"},
+  autoscale = true,
+  autoerase = true,
+  autoreplot = true,
+  description = false,
+  grid = true,
+  color = true,
+  online = false,
+  filename = "SingleZoneThermal3D3x3.mat",
+  leftTitleType = 1,
+  bottomTitleType = 1);

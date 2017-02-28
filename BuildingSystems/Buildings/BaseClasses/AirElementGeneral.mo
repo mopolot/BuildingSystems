@@ -351,6 +351,7 @@ algorithm
   // Magnitude
   velMag := sqrt(vVec*vVec);
 
+
   ///*****************************************************************///
   assessementPort.Tair := fluid.T;
   assessementPort.velMag := velMag;
